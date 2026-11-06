@@ -1,3 +1,17 @@
+# Current production release — 6 November 2026
+
+The requested follow-up is published at https://stranded-qognition-268.vercel.app . The repository is now public at https://github.com/Mohamedhassan268/stranded-web .
+
+- Product source: c96a110ae769402f5b341c1692429ec4de240fdb
+- Vercel deployment: dpl_5MFBtxh5hJyB8fEtVeQCEthGFLwD, READY, production.
+- Inspector: https://vercel.com/mohamedhassan268s-projects/stranded-qognition-268/5MFBtxh5hJyB8fEtVeQCEthGFLwD
+- Seven cinematic shots, centered freefall camera, touch/tree/storm story, interactive partial sphere, shared site theme and reduced drawing cost.
+- Verification and limitations: evolution/REVIEW.md. All six production browser tests passed; the final geometry-only canopy correction has a subsequent focused production visual check. Recording hashes are unchanged.
+
+The original deployment record below describes the initial private repository state. Visibility was changed to public at the user's explicit request for this follow-up.
+
+---
+
 # Production release — 6 November 2026
 
 User approved the cinematic sample and explicitly requested Vercel deployment.

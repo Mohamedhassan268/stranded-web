@@ -19,4 +19,12 @@
 
 Physical phones, a 60 FPS guarantee and production-quality character/cloth animation are not established. This remains a stylized procedural cinematic prototype. Source artifacts, original homepage archive and simulation recordings are preserved.
 
-Deployment: prepared for the existing Vercel production project; live verification follows deployment.
+## Published verification
+
+- Production: https://stranded-qognition-268.vercel.app . Public source: https://github.com/Mohamedhassan268/stranded-web . Final product revision: c96a110ae769402f5b341c1692429ec4de240fdb.
+- Vercel deployment dpl_5MFBtxh5hJyB8fEtVeQCEthGFLwD is READY and aliased to production.
+- All six browser tests also pass against public production. The final canopy-height correction subsequently passed TypeScript/build and a focused Firefox production shelter check with no page errors; the captured survivor's head is clear of the canopy.
+- Production Firefox follow-up: 38.614 FPS, median 33.32 ms, p95 33.34 ms, tracked-body center deviation 0. Compared with the earlier production baseline: about 34% higher average throughput and lower p95 (50.00 ms previously). Single-run headless measurements on one machine, not a physical-device guarantee. See live-performance.json.
+- Public home, cinematic, demo, science, privacy, robots and sitemap return 200; an unknown route returns 404. Seven public JSON assets (six runs and manifest) match local SHA-256 values.
+- Published history through the main feature commit was also scanned: three commits / 81 unique blobs, no credential-pattern matches.
+
