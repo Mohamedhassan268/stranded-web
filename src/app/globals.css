@@ -2202,6 +2202,37 @@ a.media-card:hover,
   }
 }
 
+/* Too narrow for the card and the island side by side. */
+@media (max-width: 1099px) {
+  .erupt-hero {
+    min-height: 0;
+    background: var(--wood);
+  }
+
+  .erupt-stage {
+    position: relative;
+    height: 310px;
+  }
+
+  .erupt-inner {
+    display: block;
+    min-height: 0;
+    padding: 16px;
+  }
+
+  .erupt-card {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .erupt-again {
+    right: 10px;
+    bottom: 10px;
+    min-height: 36px;
+    padding: 4px 12px;
+  }
+}
+
 @media (max-width: 1040px) {
   .post-featured {
     grid-template-columns: minmax(0, 1fr);
@@ -2245,34 +2276,6 @@ a.media-card:hover,
 
   .footer-legal {
     padding-inline: 16px;
-  }
-
-  .erupt-hero {
-    min-height: 0;
-    background: var(--wood);
-  }
-
-  .erupt-stage {
-    position: relative;
-    height: 310px;
-  }
-
-  .erupt-inner {
-    display: block;
-    min-height: 0;
-    padding: 16px;
-  }
-
-  .erupt-card {
-    width: 100%;
-    padding: 20px;
-  }
-
-  .erupt-again {
-    right: 10px;
-    bottom: 10px;
-    min-height: 36px;
-    padding: 4px 12px;
   }
 
   .post-grid,

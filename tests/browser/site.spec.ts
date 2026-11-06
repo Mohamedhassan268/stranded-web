@@ -47,6 +47,25 @@ test("the home page erupts on opening, and again on request", async ({ page }) =
   expect((await new AxeBuilder({ page }).include(".erupt-card").analyze()).violations).toEqual([]);
   expect(errors).toEqual([]);
 });
+test("the card never covers the island, at any width", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const width of [390, 785, 1000, 1099, 1100, 1280, 1600]) {
+    await page.setViewportSize({ width, height: 800 });
+    await page.goto("/");
+    await expect(page.locator(".erupt-hero")).toHaveAttribute("data-eruptions", "1");
+    const layout = await page.evaluate(() => {
+      const box = (selector: string) => document.querySelector(selector)!.getBoundingClientRect();
+      const canvas = document.querySelector<HTMLCanvasElement>(".erupt-canvas")!;
+      const { data } = canvas.getContext("2d")!.getImageData(0, 0, canvas.width, canvas.height);
+      // The rock at the volcano's foot is the only grey on land, so count it across the canvas.
+      let rock = 0;
+      for (let at = 0; at < data.length; at += 4) if (Math.abs(data[at] - data[at + 1]) < 24 && data[at] > 70 && data[at] < 175 && data[at + 2] < data[at] && data[at + 1] > data[at + 2]) rock += 1;
+      return { rock: rock / (canvas.width * canvas.height), cardBottom: box(".erupt-card").bottom, stageBottom: box(".erupt-stage").bottom, cardTop: box(".erupt-card").top };
+    });
+    expect(layout.rock, `volcano size at ${width}px`).toBeGreaterThan(0.03);
+    if (width < 1100) expect(layout.cardTop, `card stacks at ${width}px`).toBeGreaterThanOrEqual(layout.stageBottom);
+  }
+});
 test("the ad plays from the home page, with a poster and captions", async ({ page, request }) => {
   await page.goto("/");
   const video = page.locator("#ad video");

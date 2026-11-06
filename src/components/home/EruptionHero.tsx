@@ -27,10 +27,10 @@ export function EruptionHero({ children }: { children: ReactNode }) {
     const measure = () => {
       const box = painted.getBoundingClientRect();
       if (!box.width || !box.height) return;
-      pixel = box.width < 760 ? 2 : 3;
+      pixel = box.width < 1100 ? 2 : 3;
       const cardBox = card.current?.getBoundingClientRect();
-      // Beside the card on wide screens. Stacked on phones, where the whole canvas is free.
-      const overlaps = cardBox && cardBox.top < box.bottom - 40 && box.width >= 760;
+      // The card sits over the sky on wide screens. On narrower ones it stacks below the scene.
+      const overlaps = cardBox && cardBox.top < box.bottom - 40;
       const left = overlaps ? Math.ceil((cardBox.right - box.left) / pixel) : 0;
       world.layout(Math.ceil(box.width / pixel), Math.ceil(box.height / pixel), left);
     };
