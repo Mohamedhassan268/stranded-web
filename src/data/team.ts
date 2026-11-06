@@ -38,7 +38,7 @@ export const team: TeamMember[] = [
   {
     name: "Mohammed Hassan",
     university: "Misr University for Science and Technology",
-    study: "",
+    study: "Communication and Electronics",
     country: "Egypt",
     photo: "/team/mohammed-hassan.jpg",
     links: {},
