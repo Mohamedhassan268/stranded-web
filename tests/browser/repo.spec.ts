@@ -179,6 +179,7 @@ test("the team page shows the people, their photos and their credits", async ({ 
   for (const name of ["Muammal A. Fadhil", "Bernard Kim", "Mohammed Hassan", "Brodin Vance"]) {
     await expect(page.getByRole("heading", { name })).toBeVisible();
   }
+  await expect(page.locator(".team-card").getByRole("link", { name: "LinkedIn" })).toHaveCount(4);
   const photos = page.locator(".team-portrait img");
   await expect(photos).toHaveCount(3);
   for (const src of await photos.evaluateAll((images) => images.map((image) => image.getAttribute("src")!))) {
