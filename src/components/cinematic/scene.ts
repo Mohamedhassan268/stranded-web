@@ -1,10 +1,10 @@
 import * as THREE from "three";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
-import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { FXAAShader } from "three/addons/shaders/FXAAShader.js";
+import { createStoryEffects } from "./story-effects";
 import { createCharacter } from "./character";
 import { createIsland, terrainHeight } from "./island";
 
@@ -29,20 +29,20 @@ export function mountScene(
   let renderer: THREE.WebGLRenderer;
   try {
     renderer = new THREE.WebGLRenderer({
-      antialias: true,
+      antialias: false,
       powerPreference: "high-performance",
-      preserveDrawingBuffer: true,
+      preserveDrawingBuffer: false,
     });
   } catch {
     callback.error();
     return () => {};
   }
-  renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio, window.innerWidth < 700 ? 1.25 : 1.6),
-  );
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
+  renderer.shadowMap.autoUpdate = false;
+  renderer.shadowMap.needsUpdate = true;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.2;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -61,8 +61,9 @@ export function mountScene(
     new THREE.ShaderMaterial({
       side: THREE.BackSide,
       depthWrite: false,
+      uniforms: { storm: { value: 0 } },
       vertexShader: `varying vec3 vWorld;void main(){vWorld=(modelMatrix*vec4(position,1.)).xyz;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
-      fragmentShader: `varying vec3 vWorld;void main(){vec3 d=normalize(vWorld);float h=clamp(d.y,0.,1.);vec3 c=mix(vec3(.85,.63,.43),vec3(.10,.27,.32),pow(h,.35));c=mix(c,vec3(.035,.10,.16),smoothstep(.15,.95,h));float sun=pow(max(dot(d,normalize(vec3(-.65,.22,-.75))),0.),170.);c+=vec3(1.,.65,.29)*sun*.9;gl_FragColor=vec4(c,1.);}`,
+      fragmentShader: `uniform float storm;varying vec3 vWorld;void main(){vec3 d=normalize(vWorld);float h=clamp(d.y,0.,1.);vec3 c=mix(vec3(.85,.63,.43),vec3(.10,.27,.32),pow(h,.35));c=mix(c,vec3(.035,.10,.16),smoothstep(.15,.95,h));float sun=pow(max(dot(d,normalize(vec3(-.65,.22,-.75))),0.),170.);c+=vec3(1.,.65,.29)*sun*.9;c=mix(c,vec3(.055,.12,.14)+c*.24,storm);gl_FragColor=vec4(c,1.);}`,
     }),
   );
   scene.add(sky);
@@ -105,6 +106,9 @@ export function mountScene(
   scene.add(island.root);
   const actor = createCharacter();
   scene.add(actor.root);
+  actor.root.traverse((o) => {
+    if (o instanceof THREE.Mesh) o.castShadow = false;
+  });
   const land = island.landing.clone();
   const mind = new THREE.Group();
   mind.position.copy(island.mindPosition).add(new THREE.Vector3(0, 1.15, 0));
@@ -119,6 +123,26 @@ export function mountScene(
     }),
   );
   mind.add(mindCore);
+  const glowCanvas = document.createElement("canvas");
+  glowCanvas.width = glowCanvas.height = 128;
+  const ctx = glowCanvas.getContext("2d")!;
+  const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  gradient.addColorStop(0, "rgba(238,255,153,.85)");
+  gradient.addColorStop(0.16, "rgba(214,255,87,.45)");
+  gradient.addColorStop(0.5, "rgba(127,255,210,.10)");
+  gradient.addColorStop(1, "rgba(127,255,210,0)");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, 128, 128);
+  const glow = new THREE.Sprite(
+    new THREE.SpriteMaterial({
+      map: new THREE.CanvasTexture(glowCanvas),
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    }),
+  );
+  glow.scale.set(3, 3, 1);
+  mind.add(glow);
   const quantumWire = new THREE.Mesh(
     new THREE.IcosahedronGeometry(0.62, 1),
     new THREE.MeshBasicMaterial({
@@ -224,13 +248,6 @@ export function mountScene(
   scene.add(dust);
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
-  const bloom = new UnrealBloomPass(
-    new THREE.Vector2(window.innerWidth, window.innerHeight),
-    0.28,
-    0.6,
-    1.5,
-  );
-  composer.addPass(bloom);
   const film = new ShaderPass({
     uniforms: {
       tDiffuse: { value: null },
@@ -243,197 +260,322 @@ export function mountScene(
   });
   composer.addPass(film);
   composer.addPass(new OutputPass());
-  const fxaa=new ShaderPass(FXAAShader);
-  fxaa.uniforms.resolution.value.set(1/(window.innerWidth*renderer.getPixelRatio()),1/(window.innerHeight*renderer.getPixelRatio()));
+  const fxaa = new ShaderPass(FXAAShader);
+  fxaa.uniforms.resolution.value.set(
+    1 / (window.innerWidth * renderer.getPixelRatio()),
+    1 / (window.innerHeight * renderer.getPixelRatio()),
+  );
   composer.addPass(fxaa);
 
+  const shadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.8, 1.5),
+    new THREE.MeshBasicMaterial({
+      map: (glow.material as THREE.SpriteMaterial).map,
+      color: 0x000000,
+      transparent: true,
+      opacity: 0.6,
+      depthWrite: false,
+    }),
+  );
+  shadow.rotation.x = -Math.PI / 2;
+  scene.add(shadow);
+  const effects = createStoryEffects(scene, land);
   const shots = [
     { from: 0, to: 0.3, ms: 4600 },
     { from: 0.3, to: 0.4, ms: 1700 },
     { from: 0.4, to: 0.63, ms: 4300 },
     { from: 0.63, to: 0.85, ms: 3900 },
-    { from: 0.85, to: 1, ms: 4000 },
+    { from: 0.85, to: 1, ms: 4400 },
+    { from: 1, to: 1.3, ms: 5500 },
+    { from: 1.3, to: 1.65, ms: 6000 },
   ];
-  let replayRequested = false;
   let desired = 0,
     current = 0,
     phase = 0,
     started = false,
     playing = false,
-    clipStart = 0,
-    clipFrom = 0,
-    clipTo = 0,
-    clipDuration = 0,
+    replayRequested = false;
+  let elapsed = 0,
     raf = 0,
     alive = true,
     lastNow = 0,
-    visibility = true;
-  const pixel = new THREE.Vector2();
-  const targetCam = new THREE.Vector3(),
-    targetLook = new THREE.Vector3(),
-    look = new THREE.Vector3();
-  function begin(index: number, now: number) {
+    visibility = !document.hidden,
+    inspect = false,
+    expansion = 0,
+    uiAt = 0,
+    time = 0;
+  let frameAverage = 16.7,
+    qualitySamples = 0,
+    qualityAt = 0;
+  let viewportHeight = window.innerHeight,
+    shellTop = 0;
+  const pointer = { x: 0, y: 0 },
+    targetCam = new THREE.Vector3(),
+    targetLook = new THREE.Vector3();
+  const center = new THREE.Vector3(),
+    projected = new THREE.Vector3(),
+    hand = new THREE.Vector3(),
+    touchPoint = new THREE.Vector3();
+  const direction = mind.position.clone().sub(land).setY(0).normalize();
+  const side = new THREE.Vector3(direction.z, 0, -direction.x);
+  const contact = mind.position
+    .clone()
+    .addScaledVector(direction, -1.08)
+    .addScaledVector(side, -0.45);
+  contact.y = terrainHeight(contact.x, contact.z) + 0.03;
+  const evadeEnd = new THREE.Vector3(land.x + 3.3, 0, land.z - 0.4);
+  evadeEnd.y = terrainHeight(evadeEnd.x, evadeEnd.z) + 0.03;
+  const shelterEnd = effects.shelterPosition
+    .clone()
+    .add(new THREE.Vector3(0, 0.03, 0.2));
+  const fallCenters: THREE.Vector3[] = [];
+  const box = new THREE.Box3();
+  for (let i = 0; i <= 30; i++) {
+    actor.pose(i * 0.01, 0);
+    actor.root.updateMatrixWorld(true);
+    fallCenters.push(
+      box.setFromObject(actor.root).getCenter(new THREE.Vector3()),
+    );
+  }
+  const keys = [
+    { p: 0.3, c: [6, 3, 9], l: [0, 1, 0] },
+    { p: 0.4, c: [-3.4, 1.5, 5], l: [0, 1.1, 0] },
+    { p: 0.52, c: [0.25, 2.25, 2.5], l: [0, 2, 0.15] },
+    { p: 0.6, c: [0.1, 2.6, 0.25], l: [-4, 2.15, -3] },
+    { p: 0.65, c: [-1, 3.2, 3], l: [-4, 2.15, -3] },
+    { p: 0.85, c: [-7, 4, 4], l: [-2, 1.9, -1.5] },
+    {
+      p: 1,
+      c: [
+        contact.x - land.x - 5,
+        contact.y - land.y + 4.6,
+        contact.z - land.z + 8,
+      ],
+      l: [contact.x - land.x, contact.y - land.y + 1.6, contact.z - land.z],
+    },
+  ];
+  function begin(index: number) {
     current = index;
-    const shot = shots[index];
-    phase = shot.from;
-    clipFrom = shot.from;
-    clipTo = shot.to;
-    clipDuration = callback.reduced ? 1 : shot.ms;
-    clipStart = now;
+    phase = shots[index].from;
+    elapsed = 0;
     playing = true;
     callback.shot(index, true);
   }
   function scroll() {
-    const top = shell.getBoundingClientRect().top + window.scrollY;
-    const y = window.scrollY - top;
-    desired = clamp(Math.floor(y / window.innerHeight), 0, 4);
+    const y = window.scrollY - shellTop;
+    desired = clamp(Math.floor(y / viewportHeight), 0, 6);
     if (y > 18) started = true;
   }
-  const pointer = { x: 0, y: 0 };
-  const mouse = (e: PointerEvent) => {
-    pointer.x = e.clientX / window.innerWidth - 0.5;
-    pointer.y = e.clientY / window.innerHeight - 0.5;
-  };
-  const resize = () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
+  function resize() {
+    viewportHeight = window.innerHeight;
+    shellTop = shell.getBoundingClientRect().top + window.scrollY;
+    camera.aspect = window.innerWidth / viewportHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    composer.setSize(window.innerWidth, window.innerHeight);
-    fxaa.uniforms.resolution.value.set(1/(window.innerWidth*renderer.getPixelRatio()),1/(window.innerHeight*renderer.getPixelRatio()));
+    renderer.setSize(window.innerWidth, viewportHeight);
+    composer.setSize(window.innerWidth, viewportHeight);
+    fxaa.uniforms.resolution.value.set(
+      1 / (window.innerWidth * renderer.getPixelRatio()),
+      1 / (viewportHeight * renderer.getPixelRatio()),
+    );
     scroll();
-  };
-  const visible = () => {
+  }
+  function mouse(e: PointerEvent) {
+    pointer.x = e.clientX / window.innerWidth - 0.5;
+    pointer.y = e.clientY / viewportHeight - 0.5;
+  }
+  function visible() {
     visibility = !document.hidden;
     lastNow = 0;
-  };
-  const choose=(e:Event)=>{const value=(e as CustomEvent<number>).detail;if(Number.isInteger(value)&&value>=0&&value<shots.length){desired=value;started=true;replayRequested=true;}};
-  shell.addEventListener("cinematic-shot",choose);
-  window.addEventListener("scroll", scroll, { passive: true });
-  window.addEventListener("pointermove", mouse, { passive: true });
-  window.addEventListener("resize", resize);
-  document.addEventListener("visibilitychange", visible);
-  renderer.domElement.addEventListener("webglcontextlost", lost);
+  }
+  function choose(e: Event) {
+    const value = (e as CustomEvent<number>).detail;
+    if (Number.isInteger(value) && value >= 0 && value < shots.length) {
+      desired = value;
+      started = true;
+      replayRequested = true;
+    }
+  }
+  function inspecting(e: Event) {
+    inspect = Boolean((e as CustomEvent<boolean>).detail);
+  }
   function lost(e: Event) {
     e.preventDefault();
     callback.error();
     alive = false;
     cancelAnimationFrame(raf);
   }
+  shell.addEventListener("cinematic-shot", choose);
+  shell.addEventListener("quantum-inspect", inspecting);
+  window.addEventListener("scroll", scroll, { passive: true });
+  window.addEventListener("pointermove", mouse, { passive: true });
+  window.addEventListener("resize", resize);
+  document.addEventListener("visibilitychange", visible);
+  renderer.domElement.addEventListener("webglcontextlost", lost);
   function cameraAt(p: number) {
-    const keys = [
-      {
-        p: 0,
-        cam: [land.x + 8, land.y + 51, land.z + 13],
-        look: [land.x, land.y + 41, land.z],
-      },
-      {
-        p: 0.16,
-        cam: [land.x - 8, land.y + 29, land.z + 10],
-        look: [land.x, land.y + 24, land.z],
-      },
-      {
-        p: 0.3,
-        cam: [land.x + 6, land.y + 3, land.z + 9],
-        look: [land.x, land.y + 1, land.z],
-      },
-      {
-        p: 0.4,
-        cam: [land.x - 3.4, land.y + 1.5, land.z + 5.0],
-        look: [land.x, land.y + 1.1, land.z],
-      },
-      {
-        p: 0.52,
-        cam: [land.x + 0.25, land.y + 2.25, land.z + 2.5],
-        look: [land.x, land.y + 2.0, land.z + 0.15],
-      },
-      {
-        p: 0.6,
-        cam: [land.x + 0.1, land.y + 2.6, land.z + 0.25],
-        look: [mind.position.x, mind.position.y, mind.position.z],
-      },
-      {
-        p: 0.65,
-        cam: [land.x - 1, land.y + 3.2, land.z + 3],
-        look: [mind.position.x, mind.position.y, mind.position.z],
-      },
-      {
-        p: 0.85,
-        cam: [
-          mind.position.x - 2.2,
-          mind.position.y + 1.2,
-          mind.position.z + 3.8,
-        ],
-        look: [mind.position.x, mind.position.y, mind.position.z],
-      },
-      {
-        p: 1,
-        cam: [land.x + 8, land.y + 7.4, land.z + 10],
-        look: [land.x - 5, land.y + 1.3, land.z - 5],
-      },
-    ];
-    let a = keys[0],
-      b = keys[1];
-    for (let i = 0; i < keys.length - 1; i++)
-      if (p >= keys[i].p) {
-        a = keys[i];
-        b = keys[i + 1];
+    if (p <= 0.3) {
+      const sample = clamp(p * 100, 0, 30),
+        i = Math.min(29, Math.floor(sample));
+      center
+        .copy(fallCenters[i])
+        .lerp(fallCenters[i + 1], sample - i)
+        .applyMatrix4(actor.root.matrixWorld);
+      const t = smooth(0, 0.3, p),
+        angle = lerp(0.57, -0.53, smooth(0, 0.19, p));
+      targetLook.copy(center);
+      targetCam
+        .set(
+          Math.sin(angle) * lerp(14, 11, t),
+          lerp(4.2, 2.5, t),
+          Math.cos(angle) * lerp(14, 11, t),
+        )
+        .add(center);
+    } else if (p <= 1) {
+      let i = 0;
+      while (i < keys.length - 2 && p > keys[i + 1].p) i++;
+      const a = keys[i],
+        b = keys[i + 1],
+        t = smooth(a.p, b.p, p);
+      targetCam
+        .set(
+          lerp(a.c[0], b.c[0], t),
+          lerp(a.c[1], b.c[1], t),
+          lerp(a.c[2], b.c[2], t),
+        )
+        .add(land);
+      targetLook
+        .set(
+          lerp(a.l[0], b.l[0], t),
+          lerp(a.l[1], b.l[1], t),
+          lerp(a.l[2], b.l[2], t),
+        )
+        .add(land);
+    } else {
+      const t = smooth(1, 1.3, p),
+        storm = smooth(1.3, 1.65, p);
+      targetLook
+        .copy(actor.root.position)
+        .add(new THREE.Vector3(0, 1.6 - storm * 0.3, 0));
+      targetCam.copy(targetLook);
+      targetCam.x += lerp(-5, 4.8, t);
+      targetCam.y += lerp(3, 1.2, storm);
+      targetCam.z += lerp(8, 7, storm);
+    }
+    if (expansion > 0.001) {
+      center.copy(actor.root.position);
+      center.y += 1.5;
+      if (window.innerWidth >= 700) {
+        center.x += 1.9;
+        center.z += 0.4;
       }
-    const t = smooth(a.p, b.p, p);
-    targetCam.fromArray(a.cam).lerp(new THREE.Vector3().fromArray(b.cam), t);
-    targetLook.fromArray(a.look).lerp(new THREE.Vector3().fromArray(b.look), t);
+      targetLook.lerp(center, expansion);
+      center.copy(actor.root.position).add(new THREE.Vector3(-5, 3.8, 9));
+      targetCam.lerp(center, expansion);
+    }
   }
   function frame(now: number) {
     if (!alive) return;
     raf = requestAnimationFrame(frame);
     if (!visibility) return;
-    const time = callback.reduced ? 0 : now * 0.001;
-    if (!playing && started && (desired !== current || phase === 0 || replayRequested)) {
-      const index=phase===0&&!replayRequested?0:desired;
-      replayRequested=false;
-      begin(index,now);
+    const dt = lastNow ? Math.min(now - lastNow, 80) : 0;
+    lastNow = now;
+    if (!callback.reduced) time += dt * 0.001;
+    if (
+      !inspect &&
+      !playing &&
+      started &&
+      (desired !== current || phase === 0 || replayRequested)
+    ) {
+      const index = phase === 0 && !replayRequested ? 0 : desired;
+      replayRequested = false;
+      begin(index);
     }
-    if (playing) {
-      const t = clamp((now - clipStart) / clipDuration, 0, 1);
+    if (playing && !inspect) {
+      elapsed += callback.reduced ? shots[current].ms : dt;
+      const t = clamp(elapsed / shots[current].ms, 0, 1);
       const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-      phase = lerp(clipFrom, clipTo, eased);
-      if (t >= 1) {
+      phase = lerp(shots[current].from, shots[current].to, eased);
+      if (t === 1) {
         playing = false;
         callback.shot(current, false);
       }
     }
+    expansion = callback.reduced
+      ? Number(inspect)
+      : THREE.MathUtils.damp(expansion, Number(inspect), 6, dt * 0.001);
     actor.pose(phase, time);
-    const height =
-      phase <= 0.3 ? 41 * Math.pow(1 - clamp(phase / 0.3, 0, 1), 1.3) : 0;
     actor.root.position.copy(land);
-    actor.root.position.y += height;
     actor.root.rotation.set(
       0,
       phase < 0.3
         ? lerp(-0.5, 0.35, phase / 0.3)
-        : lerp(0.35, -1.2, smooth(0.4, 0.86, phase)),
+        : lerp(
+            0.35,
+            Math.atan2(direction.x, direction.z),
+            smooth(0.4, 0.85, phase),
+          ),
       0,
     );
+    const height =
+      phase <= 0.3 ? 41 * Math.pow(1 - clamp(phase / 0.3, 0, 1), 1.3) : 0;
     if (phase < 0.3) {
       actor.root.rotation.z =
         0.22 * Math.sin(phase * 8) + 0.06 * Math.sin(time);
       actor.root.rotation.x = -0.12;
     }
-    const walking = smooth(0.85, 1, phase);
-    actor.root.position.x -= walking * 3;
-    actor.root.position.z -= walking * 2;
+    if (phase >= 0.85 && phase <= 1) {
+      const walk = smooth(0.85, 0.95, phase);
+      actor.root.position.lerp(contact, walk);
+      actor.perform("walk", Math.sin(Math.PI * walk), time);
+      actor.perform("touch", smooth(0.94, 0.99, phase), time);
+    }
+    if (phase > 1 && phase <= 1.3) {
+      const t = clamp((phase - 1) / 0.3, 0, 1);
+      actor.root.position.copy(contact).lerp(evadeEnd, t);
+      actor.root.position.z += Math.sin(Math.PI * t) * 2.2;
+      actor.root.rotation.y = Math.atan2(
+        evadeEnd.x - contact.x,
+        evadeEnd.z - contact.z + Math.cos(Math.PI * t) * 6.9,
+      );
+      actor.perform("walk", Math.sin(Math.PI * t) * 0.9, time);
+    }
+    if (phase > 1.3) {
+      const t = smooth(1.3, 1.56, phase);
+      actor.root.position.copy(evadeEnd).lerp(shelterEnd, t);
+      actor.root.rotation.y = lerp(Math.PI / 2, 0, smooth(1.5, 1.65, phase));
+      actor.perform("walk", Math.sin(Math.PI * t), time);
+      actor.perform("duck", smooth(1.47, 1.6, phase), time);
+    }
     actor.root.position.y =
-      height +
       terrainHeight(actor.root.position.x, actor.root.position.z) +
-      0.03;
+      0.03 +
+      height;
+    shadow.position.copy(actor.root.position);
+    shadow.position.y -= height - 0.006;
+    shadow.visible = phase >= 0.29;
     const eyeClose = smooth(0.53, 0.555, phase) - smooth(0.58, 0.62, phase);
     actor.eyeOpen(1 - eyeClose);
-    shell.style.setProperty("--eye-close", String(eyeClose));
     actor.root.visible = !(phase > 0.565 && phase < 0.625);
+    actor.root.updateMatrixWorld(true);
     const reveal = smooth(0.56, 0.72, phase);
     mind.visible = phase > 0.52;
     mind.scale.setScalar(0.4 + reveal * 0.6);
-    mind.position.y =
-      island.mindPosition.y + 1.15 + Math.sin(time * 1.25) * 0.12;
+    mind.position.copy(island.mindPosition);
+    mind.position.y +=
+      1.15 + Math.sin(time * 1.25) * 0.08 * (1 - smooth(0.92, 0.99, phase));
+    // Settle the signal into his palm at contact; its free hover resumes after release.
+    if (phase >= 0.94 && phase <= 1) {
+      actor.hand.getWorldPosition(hand);
+      touchPoint.set(0, -0.17, 0).applyMatrix4(actor.hand.matrixWorld);
+      mind.position.lerp(touchPoint, smooth(0.94, 0.99, phase));
+    }
+    if (phase > 1) {
+      touchPoint.copy(contact).add(new THREE.Vector3(-0.7, 2.2, -0.6));
+      hand.copy(actor.root.position).addScaledVector(side, -1.6);
+      hand.y += 2.7;
+      mind.position.copy(touchPoint).lerp(hand, smooth(1, 1.055, phase));
+    }
+    mindLight.position.copy(mind.position);
+    mindLight.intensity = reveal * 12;
     quantumWire.rotation.set(time * 0.18, time * 0.14, 0);
     mindCore.rotation.set(time * 0.3, time * 0.22, 0);
     rings.forEach((r, i) => {
@@ -441,50 +583,90 @@ export function mountScene(
       r.rotation.z = time * 0.14 + i * 0.7;
     });
     motes.rotation.y = -time * 0.07;
-    mindLight.intensity = reveal * 12;
-    routeMaterial.opacity = smooth(0.79, 0.95, phase) * 0.85;
-    nodes.forEach(
-      (n) =>
-        ((n.material as THREE.MeshBasicMaterial).opacity =
-          routeMaterial.opacity * (0.6 + 0.3 * Math.sin(time * 2))),
-    );
+    const storm = effects.update(phase, time, actor.root.position, expansion);
+    sun.intensity = 4 - storm * 2.6;
+    (sky.material as THREE.ShaderMaterial).uniforms.storm.value = storm;
+    (scene.fog as THREE.FogExp2).density = 0.0045 + storm * 0.013;
+    routeMaterial.opacity = 0;
+    nodes.forEach((n) => {
+      (n.material as THREE.MeshBasicMaterial).opacity = 0;
+    });
     waterUniforms.time.value = time;
-    waterUniforms.eye.value.copy(camera.position);
     dust.rotation.y = time * 0.003;
     island.update(time);
     cameraAt(phase);
-    if(!callback.reduced){targetCam.x += pointer.x * 0.13;
-    targetCam.y += pointer.y * 0.08;}
-    camera.position.copy(targetCam);
-    look.copy(targetLook);
-    if (phase > 0.3 && phase < 0.34) {
-      const shake = (1 - smooth(0.3, 0.34, phase)) * 0.12;
-      camera.position.x += Math.sin(time * 41) * shake;
-      camera.position.y += Math.cos(time * 53) * shake;
+    if (!callback.reduced && phase > 0.3) {
+      targetCam.x += pointer.x * 0.1;
+      targetCam.y += pointer.y * 0.06;
     }
-    camera.lookAt(look);
+    camera.position.copy(targetCam);
+    camera.lookAt(targetLook);
+    camera.updateMatrixWorld();
+    waterUniforms.eye.value.copy(camera.position);
     film.uniforms.time.value = time;
-    film.uniforms.eyeClose.value=eyeClose;
-    film.uniforms.amount.value =
-      0.0006 + (phase > 0.3 && phase < 0.34 ? 0.004 : 0);
-    shell.style.setProperty(
-      "--shot-progress",
-      String(playing ? clamp((now - clipStart) / clipDuration, 0, 1) : 1),
-    );
-    shell.dataset.phase = phase.toFixed(4);
-    shell.dataset.shot = String(current);
-    shell.dataset.animating = String(playing);
+    film.uniforms.eyeClose.value = eyeClose;
+    film.uniforms.amount.value = 0.0006;
+    if (now - uiAt > 80) {
+      uiAt = now;
+      shell.style.setProperty("--eye-close", String(eyeClose));
+      shell.style.setProperty(
+        "--shot-progress",
+        String(playing ? clamp(elapsed / shots[current].ms, 0, 1) : 1),
+      );
+      shell.dataset.phase = phase.toFixed(4);
+      shell.dataset.shot = String(current);
+      shell.dataset.animating = String(playing);
+      shell.dataset.dome = expansion.toFixed(3);
+      shell.dataset.mindVisible = String(phase >= 0.78 && !playing && !inspect);
+      projected.copy(mind.position).project(camera);
+      shell.style.setProperty(
+        "--mind-x",
+        `${(projected.x * 0.5 + 0.5) * 100}%`,
+      );
+      shell.style.setProperty(
+        "--mind-y",
+        `${(-projected.y * 0.5 + 0.5) * 100}%`,
+      );
+      if (phase <= 0.3) {
+        projected.copy(center).project(camera);
+        shell.dataset.centerX = projected.x.toFixed(4);
+        shell.dataset.centerY = projected.y.toFixed(4);
+      }
+      shell.dataset.actorX = actor.root.position.x.toFixed(3);
+      shell.dataset.actorZ = actor.root.position.z.toFixed(3);
+      shell.dataset.tree = effects.tree.rotation.z.toFixed(3);
+      shell.dataset.storm = storm.toFixed(3);
+    }
+    const renderStart = performance.now();
     composer.render();
-    lastNow = now;
+    if (now - uiAt < 2) {
+      shell.dataset.renderMs = (performance.now() - renderStart).toFixed(2);
+      shell.dataset.meshes = String(actor.root.userData.meshes.after);
+    }
+    if (!callback.reduced && dt > 0 && qualitySamples < 120) {
+      frameAverage = frameAverage * 0.95 + dt * 0.05;
+      qualitySamples++;
+      if (
+        qualitySamples === 120 &&
+        frameAverage > 27 &&
+        now - qualityAt > 2000 &&
+        renderer.getPixelRatio() > 1
+      ) {
+        qualityAt = now;
+        renderer.setPixelRatio(1);
+        resize();
+      }
+    }
   }
-  scroll();
+  resize();
   callback.ready();
   callback.shot(0, false);
   raf = requestAnimationFrame(frame);
   return () => {
     alive = false;
     cancelAnimationFrame(raf);
-    shell.removeEventListener("cinematic-shot",choose);
+    shell.removeEventListener("cinematic-shot", choose);
+    shell.removeEventListener("quantum-inspect", inspecting);
     window.removeEventListener("scroll", scroll);
     window.removeEventListener("pointermove", mouse);
     window.removeEventListener("resize", resize);
@@ -493,7 +675,7 @@ export function mountScene(
     scene.traverse((o) => {
       const mesh = o as THREE.Mesh;
       if (mesh.geometry) mesh.geometry.dispose();
-      if (mesh.material) {
+      if (mesh.material)
         for (const m of Array.isArray(mesh.material)
           ? mesh.material
           : [mesh.material]) {
@@ -501,9 +683,8 @@ export function mountScene(
             if (value instanceof THREE.Texture) value.dispose();
           m.dispose();
         }
-      }
     });
-    for(const pass of composer.passes)pass.dispose();
+    for (const pass of composer.passes) pass.dispose();
     composer.dispose();
     renderer.dispose();
     renderer.domElement.remove();

@@ -1,6 +1,6 @@
 # Stranded website
 
-A cinematic, static Next.js showcase and data-driven replay lab for the current Stranded quantum-cognition research project. Original source: https://github.com/Muammal/Qiskit-Fest-Qognition . The website repository is private; the intended showcase and its cleared generated recordings are public on Vercel.
+A cinematic, static Next.js showcase and data-driven replay lab for the current Stranded quantum-cognition research project. Original source: https://github.com/Muammal/Qiskit-Fest-Qognition . The website repository and its cleared generated recordings are public. Live site: https://stranded-qognition-268.vercel.app .
 
 ## Run
 
@@ -14,7 +14,7 @@ To regenerate: run `python scripts/export_replays.py --source /absolute/path/to/
 
 ## Routes and boundaries
 
-- `/`: supplied cinematic visual rhythm with a scroll-linked drop and static reduced-motion equivalent.
+- `/`: seven scroll-triggered 3D shots: fall, impact, waking, discovery, touch, tree evasion and storm shelter; clickable quantum-mind inspection and static reduced-motion shots.
 - `/demo/`: validated replay loading, integrity checks, transport, scrubbing, run/model selection, matched comparison, provenance and downloads.
 - `/science/`: current implementation, rule-based prior, separate Qiskit role, source references and material negative results.
 - `/privacy/`: no application tracking or user accounts; hosting logs described.

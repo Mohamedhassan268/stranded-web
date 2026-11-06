@@ -13,9 +13,9 @@ export default function Demo() {
         <div>
           <p className="eyebrow">THE REPLAY LAB / RECORDED SIMULATION</p>
           <h1>
-            Every move.
+            THE REPLAY.
             <br />
-            <span className="violet-text">Open to inspection.</span>
+            <span className="violet-text">EVERY CHOICE.</span>
           </h1>
         </div>
         <p>

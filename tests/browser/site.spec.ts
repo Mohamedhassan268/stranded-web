@@ -1,13 +1,19 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-test("cinematic homepage, science metadata and 404", async ({page})=>{
-  const errors:string[]=[];page.on("pageerror",e=>errors.push(e.message));
-  await page.goto("/");await expect(page.locator(".cinematic-canvas canvas")).toBeVisible();
-  await expect(page.getByRole("heading",{level:1})).toContainText("NO WAY");
-  await expect(page.getByRole("link",{name:"SKIP TO REPLAY"})).toBeInViewport();
-  await page.goto("/science/");await expect(page).toHaveTitle(/science.*Stranded/);
+test("cinematic homepage, science metadata and 404", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("/");
+  await expect(page.locator(".cinematic-canvas canvas")).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("NO WAY");
+  await expect(page.getByRole("link", { name: "REPLAY LAB" })).toBeInViewport();
+  await page.goto("/science/");
+  await expect(page).toHaveTitle(/science.*Stranded/);
   await expect(page.getByText("201 minutes vs 160 recorded")).toBeVisible();
-  await page.goto("/unmapped-route/");await expect(page.getByRole("heading",{level:1})).toContainText("Lost in the");
+  await page.goto("/unmapped-route/");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(
+    "Lost in the",
+  );
   expect(errors).toEqual([]);
 });
 test("playback, keyboard slider, speed, reset and paired selection", async ({
@@ -68,9 +74,7 @@ test("mobile, reduced motion, text equivalents and accessibility", async ({
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await expect(
-    page.getByRole("link", { name: "SKIP TO REPLAY" }),
-  ).toBeInViewport();
+  await expect(page.getByRole("link", { name: "REPLAY LAB" })).toBeInViewport();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,

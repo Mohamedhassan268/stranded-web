@@ -1,13 +1,12 @@
 import Link from "next/link";
-import { BrandMark, Icon } from "./Icons";
+import { Icon } from "./Icons";
 import { sourceUrl } from "@/data/site";
 export function SiteHeader() {
   return (
     <header className="site-header">
       <Link className="brand" href="/" aria-label="Stranded home">
-        <BrandMark />
         <span>
-          STRANDED<span className="brand-dot">.</span>
+          STRANDED<span className="brand-dot">_</span>
         </span>
       </Link>
       <nav aria-label="Main navigation">
@@ -32,7 +31,7 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div>
         <Link href="/" className="brand">
-          <BrandMark /> STRANDED.
+          STRANDED<span className="brand-dot">_</span>
         </Link>
         <p>
           One human. Changing circumstances.

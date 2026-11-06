@@ -73,6 +73,10 @@ function rawHeight(x: number, z: number): number {
   );
 }
 
+function inStoryCorridor(x: number, z: number) {
+  const t = clamp(((x - 9) * 10 + (z - 14.3) * 2.4) / 105.76, 0, 1);
+  return Math.hypot(x - (9 + 10 * t), z - (14.3 + 2.4 * t)) < 3.1;
+}
 const landingLevel = rawHeight(LANDING_X, LANDING_Z);
 
 export function terrainHeight(x: number, z: number): number {
@@ -129,7 +133,7 @@ function grainTexture() {
 }
 
 function buildTerrain(texture: THREE.DataTexture) {
-  const segments = 256;
+  const segments = 160;
   const width = 82;
   const positions: number[] = [];
   const colors: number[] = [];
@@ -402,7 +406,7 @@ function addPalm(
           leafletLength * 0.16,
           frondColor,
           0.5 + t * 0.5,
-          3,
+          2,
         );
       }
       if (j < 14)
@@ -490,7 +494,12 @@ function makeRocks(random: () => number, texture: THREE.DataTexture) {
     const x = Math.cos(angle) * 29.5 * radius;
     const z = Math.sin(angle) * 26 * radius;
     const y = terrainHeight(x, z);
-    if (Math.hypot(x - LANDING_X, z - LANDING_Z) < 6 || y < -0.75 || y > 10.2)
+    if (
+      inStoryCorridor(x, z) ||
+      Math.hypot(x - LANDING_X, z - LANDING_Z) < 6 ||
+      y < -0.75 ||
+      y > 10.2
+    )
       continue;
     const size = shore
       ? 0.24 + random() ** 2 * 1.3
@@ -554,6 +563,7 @@ export function createIsland(): {
       y < 0.55 ||
       y > 4.5 ||
       groundSlope(x, z) > 0.65 ||
+      inStoryCorridor(x, z) ||
       Math.hypot(x - LANDING_X, z - LANDING_Z) < 7
     )
       continue;
@@ -562,7 +572,7 @@ export function createIsland(): {
   }
   // A few close silhouettes frame the clearing without obstructing its landing radius.
   for (const [x, z, height] of [
-    [19.5, 16.5, 7.2],
+    [22.5, 13, 7.2],
     [7, 22, 6.4],
     [19, 7.4, 7.9],
   ]) {
@@ -576,6 +586,7 @@ export function createIsland(): {
       y < 1.2 ||
       y > 6.1 ||
       groundSlope(x, z) > 0.9 ||
+      inStoryCorridor(x, z) ||
       Math.hypot(x - LANDING_X, z - LANDING_Z) < 6.2
     )
       continue;
@@ -644,6 +655,7 @@ export function createIsland(): {
       y < 1.1 ||
       y > 5.9 ||
       groundSlope(x, z) > 0.85 ||
+      inStoryCorridor(x, z) ||
       Math.hypot(x - LANDING_X, z - LANDING_Z) < 5.1
     )
       continue;
@@ -745,7 +757,7 @@ export function createIsland(): {
   root.add(glow);
   root.userData.island = {
     palms: palms + 3,
-    terrainTriangles: 256 * 256 * 2,
+    terrainTriangles: 160 * 160 * 2,
     foliageTriangles: leaves.positions.length / 9,
     drawCalls: 6,
   };

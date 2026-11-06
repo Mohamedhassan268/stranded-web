@@ -12,3 +12,5 @@ __pycache__/
 
 docs/cinematic-captures/
 docs/reference-study/*.png
+
+docs/evolution/*.png

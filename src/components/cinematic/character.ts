@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 
 type Material = THREE.MeshStandardMaterial | THREE.MeshPhysicalMaterial;
@@ -11,6 +12,12 @@ export function createCharacter(): {
   pose: (phase: number, time: number) => void;
   eyeOpen: (amount: number) => void;
   head: THREE.Group;
+  perform: (
+    kind: "walk" | "touch" | "duck",
+    amount: number,
+    time: number,
+  ) => void;
+  hand: THREE.Group;
 } {
   const root = new THREE.Group();
   root.name = "David — cinematic character";
@@ -1385,7 +1392,11 @@ export function createCharacter(): {
     const breath = Math.sin(time * 1.6) * 0.006 * idle;
     pelvis.position.set(0, value("y"), 0);
     const airborne = 1 - THREE.MathUtils.smoothstep(p, 0.18, 0.29);
-    pelvis.rotation.set(-0.82 * airborne, 0.04 * Math.sin(time * 0.45) * airborne, 0.06 * airborne);
+    pelvis.rotation.set(
+      -0.82 * airborne,
+      0.04 * Math.sin(time * 0.45) * airborne,
+      0.06 * airborne,
+    );
     torso.position.y = breath;
     torso.rotation.set(value("lean"), 0, value("tilt"));
     head.rotation.set(
@@ -1437,8 +1448,115 @@ export function createCharacter(): {
     const openness = THREE.MathUtils.clamp(amount, 0, 1);
     for (const eye of eyes) eye.scale.y = 0.035 + openness * 0.965;
   }
+  const sourceGeometries = new Set<THREE.BufferGeometry>();
+  let originalMeshes = 0;
+  root.traverse((o) => {
+    if (o instanceof THREE.Mesh) {
+      sourceGeometries.add(o.geometry);
+      originalMeshes++;
+    }
+  });
+  // Merge only siblings on the same articulated joint; eye and bone transforms stay independent.
+  const joints: THREE.Object3D[] = [];
+  root.traverse((o) => {
+    if (o instanceof THREE.Group) joints.push(o);
+  });
+  for (const joint of joints) {
+    const batches = new Map<THREE.Material, THREE.Mesh[]>();
+    for (const child of joint.children) {
+      if (
+        !(child instanceof THREE.Mesh) ||
+        Array.isArray(child.material) ||
+        child.children.length
+      )
+        continue;
+      const list = batches.get(child.material) || [];
+      list.push(child);
+      batches.set(child.material, list);
+    }
+    for (const [material, meshes] of batches) {
+      if (meshes.length < 2) continue;
+      const parts = meshes.map((mesh) => {
+        mesh.updateMatrix();
+        let geometry = mesh.geometry.clone();
+        if (geometry.index) {
+          const expanded = geometry.toNonIndexed();
+          geometry.dispose();
+          geometry = expanded;
+        }
+        for (const name of Object.keys(geometry.attributes))
+          if (name !== "position" && name !== "normal")
+            geometry.deleteAttribute(name);
+        if (!geometry.attributes.normal) geometry.computeVertexNormals();
+        return geometry.applyMatrix4(mesh.matrix);
+      });
+      const merged = mergeGeometries(parts);
+      parts.forEach((g) => g.dispose());
+      if (!merged) continue;
+      const mesh = new THREE.Mesh(merged, material);
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      meshes.forEach((m) => joint.remove(m));
+      joint.add(mesh);
+    }
+  }
+  const retained = new Set<THREE.BufferGeometry>();
+  let batchedMeshes = 0;
+  root.traverse((o) => {
+    if (o instanceof THREE.Mesh) {
+      retained.add(o.geometry);
+      batchedMeshes++;
+    }
+  });
+  sourceGeometries.forEach((g) => {
+    if (!retained.has(g)) g.dispose();
+  });
+  root.userData.meshes = { before: originalMeshes, after: batchedMeshes };
   pose(1, 0);
   eyeOpen(1);
-  return { root, pose, eyeOpen, head };
+  function perform(
+    kind: "walk" | "touch" | "duck",
+    amount: number,
+    time: number,
+  ) {
+    if (kind === "walk") {
+      const swing = Math.sin(time * 7.5) * amount;
+      hips[0].rotation.x = swing * 0.42;
+      hips[1].rotation.x = -swing * 0.42;
+      knees[0].rotation.x = Math.max(0, -swing) * 0.65;
+      knees[1].rotation.x = Math.max(0, swing) * 0.65;
+      shoulders[0].rotation.x = -swing * 0.28;
+      shoulders[1].rotation.x = swing * 0.28;
+      pelvis.position.y += Math.abs(swing) * 0.045;
+    } else if (kind === "touch") {
+      shoulders[1].rotation.set(-1.29 * amount, -0.02, 0.045);
+      elbows[1].rotation.set(-0.12 * amount, 0, 0);
+      wrists[1].rotation.set(0.05, 0, 0);
+      head.rotation.y = -0.12 * amount;
+    } else {
+      pelvis.position.y -= 0.65 * amount;
+      torso.rotation.x = 0.45 * amount;
+      hips[0].rotation.x = hips[1].rotation.x = -0.9 * amount;
+      knees[0].rotation.x = knees[1].rotation.x = 1.6 * amount;
+      shoulders[0].rotation.x = shoulders[1].rotation.x = -0.6 * amount;
+      elbows[0].rotation.x = elbows[1].rotation.x = -0.6 * amount;
+      head.rotation.x = -0.25 * amount;
+    }
+    let lowest = Infinity;
+    for (let leg = 0; leg < 2; leg++) {
+      hips[leg].updateMatrix();
+      knees[leg].updateMatrix();
+      ankles[leg].updateMatrix();
+      footMatrix
+        .multiplyMatrices(hips[leg].matrix, knees[leg].matrix)
+        .multiply(ankles[leg].matrix);
+      for (const x of [-0.167, 0.167])
+        for (const z of [-0.198, 0.389]) {
+          footCorner.set(x, -0.216, z).applyMatrix4(footMatrix);
+          lowest = Math.min(lowest, footCorner.y);
+        }
+    }
+    pelvis.position.y = -lowest;
+  }
+  return { root, pose, eyeOpen, head, perform, hand: wrists[1] };
 }
-

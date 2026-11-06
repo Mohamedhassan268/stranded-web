@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import QuantumPanel from "./QuantumPanel";
 const shots = [
   {
     name: "FREEFALL",
@@ -44,31 +45,55 @@ const shots = [
         ALONE.
       </>
     ),
-    line: "There’s something in the silence.",
+    line: "Touch the signal. Understand the mind.",
   },
   {
-    name: "FOLLOW",
+    name: "CONNECT",
     title: (
       <>
-        FOLLOW
+        MAKE
         <br />
-        THE SIGNAL.
+        CONTACT.
       </>
     ),
-    line: "A mind. A path. A chance.",
+    line: "A hand reaches out. A connection forms.",
+  },
+  {
+    name: "EVADE",
+    title: (
+      <>
+        MOVE.
+        <br />
+        NOW.
+      </>
+    ),
+    line: "The canopy breaks. Change your path.",
+  },
+  {
+    name: "SHELTER",
+    title: (
+      <>
+        WEATHER
+        <br />
+        THE STORM.
+      </>
+    ),
+    line: "Find cover. Hold on. Survive.",
   },
 ];
 export default function CinematicStudy() {
   const host = useRef<HTMLDivElement>(null),
-    shell = useRef<HTMLElement>(null);
-  const [ready, setReady] = useState(false),
+    shell = useRef<HTMLElement>(null),
+    mindButton = useRef<HTMLButtonElement>(null),
+    [ready, setReady] = useState(false),
     [error, setError] = useState(false),
     [shot, setShot] = useState(0),
     [moving, setMoving] = useState(false),
-    [reduced, setReduced] = useState(false);
+    [reduced, setReduced] = useState(false),
+    [inspect, setInspect] = useState(false);
   useEffect(() => {
-    let stop: (() => void) | undefined;
-    let gone = false;
+    let stop: (() => void) | undefined,
+      gone = false;
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReduced(media.matches);
     import("./scene")
@@ -90,40 +115,87 @@ export default function CinematicStudy() {
       stop?.();
     };
   }, []);
+  function toggleMind(open: boolean) {
+    setInspect(open);
+    shell.current?.dispatchEvent(
+      new CustomEvent("quantum-inspect", { detail: open }),
+    );
+    if (!open)
+      requestAnimationFrame(() => {
+        if (shell.current) shell.current.dataset.mindVisible = "true";
+        mindButton.current?.focus();
+      });
+  }
+  useEffect(() => {
+    if (!inspect) return;
+    const before = document.activeElement as HTMLElement;
+    const dialog = shell.current?.querySelector<HTMLElement>(".quantum-panel");
+    dialog?.querySelector<HTMLElement>("button")?.focus();
+    const key = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        toggleMind(false);
+      }
+      if (e.key === "Tab" && dialog) {
+        const nodes = Array.from(
+          dialog.querySelectorAll<HTMLElement>("button,a[href]"),
+        );
+        const first = nodes[0],
+          last = nodes.at(-1);
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+    document.addEventListener("keydown", key);
+    const prevOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", key);
+      document.documentElement.style.overflow = prevOverflow;
+      if (before?.isConnected) before.focus();
+    };
+  }, [inspect]);
   function goto(i: number) {
-    const element = shell.current;
-    if (!element) return;
-    const top = element.getBoundingClientRect().top + window.scrollY;
+    if (!shell.current) return;
+    const top = shell.current.getBoundingClientRect().top + window.scrollY;
     window.scrollTo({
       top: top + (i + 0.12) * window.innerHeight,
       behavior: "instant",
     });
-    element.dispatchEvent(new CustomEvent("cinematic-shot",{detail:i}));
+    shell.current.dispatchEvent(
+      new CustomEvent("cinematic-shot", { detail: i }),
+    );
   }
   return (
     <section
       ref={shell}
       className="cinematic-page"
-      aria-label="Stranded cinematic opening design sample"
+      data-inspecting={inspect}
+      aria-label="Stranded interactive island story"
     >
       <div className="cinematic-stage">
         <div
           ref={host}
           className="cinematic-canvas"
           role="img"
-          aria-label="3D story of a yellow-jacketed survivor falling toward a tropical island, awakening and discovering a luminous quantum mind"
+          aria-label="A survivor falls to an island, connects with a quantum mind, evades a falling tree and takes cover from a storm"
         />
         <div className="cinema-grain" aria-hidden="true" />
         <div className="cinema-vignette" aria-hidden="true" />
         <div className="cinema-lid top" aria-hidden="true" />
         <div className="cinema-lid bottom" aria-hidden="true" />
-        <header className="cinema-header">
+        <header className="cinema-header" inert={inspect}>
           <Link href="/" className="cinema-brand">
             STRANDED<span>_</span>
           </Link>
-          <span className="study-label">VISUAL STUDY / 01</span>
+          <span className="study-label">ONE HUMAN / A QUANTUM MIND</span>
           <Link className="cinema-exit" href="/demo/">
-            SKIP TO REPLAY <span>↗</span>
+            REPLAY LAB <span>↗</span>
           </Link>
         </header>
         <div className="cinema-side">
@@ -131,30 +203,46 @@ export default function CinematicStudy() {
           <i />
           <span>UNKNOWN TERRITORY</span>
         </div>
-        <div className="cinema-copy" key={shot}>
+        <div className="cinema-copy" key={shot} aria-hidden={inspect}>
           <p className="cinema-eyebrow">
             {String(shot + 1).padStart(2, "0")} / {shots[shot].name}
           </p>
           <h1>{shots[shot].title}</h1>
           <p className="cinema-line">{shots[shot].line}</p>
         </div>
-        <div className="cinema-scroll">
+        <button
+          ref={mindButton}
+          className="quantum-hotspot"
+          onClick={() => toggleMind(true)}
+          aria-label="Touch the mind: inspect quantum mind"
+          inert={inspect}
+        >
+          <span className="quantum-target" />
+          <span>
+            TOUCH THE MIND <b>＋</b>
+          </span>
+        </button>
+        {inspect && <QuantumPanel close={() => toggleMind(false)} />}
+        <div className="cinema-scroll" aria-hidden={inspect}>
           <span className="scroll-glyph">↓</span>
           <span>
             {moving
               ? "LET THE SHOT UNFOLD"
-              : shot === 4
-                ? "END OF OPENING STUDY"
+              : shot === 6
+                ? "EXPLORE THE RECORDED DECISIONS IN THE REPLAY LAB"
                 : "SCROLL TO TRIGGER THE NEXT SHOT"}
           </span>
         </div>
-        <nav className="cinema-chapters" aria-label="Cinematic shots">
+        <nav
+          className="cinema-chapters"
+          aria-label="Cinematic shots"
+          inert={inspect}
+        >
           {shots.map((s, i) => (
             <button
               key={s.name}
               onClick={() => goto(i)}
               aria-current={i === shot ? "step" : undefined}
-              aria-label={`Shot ${i + 1}: ${s.name.toLowerCase()}`}
             >
               <span>{String(i + 1).padStart(2, "0")}</span>
               <i />
@@ -175,7 +263,7 @@ export default function CinematicStudy() {
         {error && (
           <div className="cinema-loading cinema-failure" role="alert">
             <h2>This scene needs WebGL.</h2>
-            <p>The 3D study could not start in this browser.</p>
+            <p>The island could not start in this browser.</p>
             <Link href="/demo/">Open the replay lab →</Link>
           </div>
         )}

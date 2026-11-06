@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/space-grotesk";
-import "@fontsource-variable/inter";
 import "./globals.css";
+import "./world-theme.css";
 import { SiteHeader, SiteFooter } from "@/components/SiteShell";
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -29,7 +28,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
   icons: { icon: "/icon.svg" },
 };
-export const viewport: Viewport = { themeColor: "#080b14" };
+export const viewport: Viewport = { themeColor: "#0b1718" };
 export default function RootLayout({
   children,
 }: {
