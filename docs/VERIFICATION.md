@@ -1,5 +1,22 @@
 # Verification record
 
+## Website redesign, November 2026
+
+Checked locally in Microsoft Edge, against a production build:
+
+- Browser tests: 14 pass, covering the home page, blog, replay, Public Repo posting and reviews, documentation, team, the 3D story, phone widths, reduced motion, recovery from bad recordings, and axe accessibility checks on most pages.
+- Node tests: 26 pass, covering recordings, `.qsim` checks and both stores.
+- TypeScript passes, and the dependency audit of production packages found nothing.
+
+Not checked:
+
+- The Redis store has only run against a stand-in for Upstash, not the real service.
+- Nothing has been deployed, so Vercel behaviour is unverified, including read-only mode.
+- `src/lib/qsim.ts` was compared with `simfile.py` by reading it. A file accepted here was not run through the Python checker.
+- Physical phones and browsers other than Edge.
+
+The record below is from the earlier site.
+
 6 November 2026. This record distinguishes local interface evidence from scientific validation.
 
 ## Review
@@ -21,7 +38,7 @@ Three fresh-context, read-only reviewers used the codebase-details and design pe
 
 ## Boundaries
 
-The original supplied blueprint and qognition source were not edited by this implementation. The original source moved from the initial inspected revision during preparation; exports explicitly pin the clean 27c367c5f32f571a7df33b95fe675abdcfc6e7af snapshot. Browser checks do not establish native phone behavior, scientific validation, physical-model validity, or hardware execution. No raw restricted datasets, credentials, tracking, personal photos, fabricated team roles or invented benchmark metrics are shipped.
+The original supplied blueprint and qognition source were not edited by this implementation. The original source moved from the initial inspected revision during preparation; exports explicitly pin the clean 27c367c5f32f571a7df33b95fe675abdcfc6e7af snapshot. Browser checks do not establish native phone behavior, scientific validation, physical-model validity, or hardware execution. No raw restricted datasets, credentials, tracking or invented benchmark metrics are shipped. Team names, photos and credits are as supplied by the team.
 
 ## Publication
 

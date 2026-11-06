@@ -1,6 +1,8 @@
-docs/
-tests/
-scripts/
-playwright-report/
-test-results/
+/docs/
+/tests/
+/scripts/
+/playwright-report/
+/test-results/
+/.data/
+/.next-test/
 *.tsbuildinfo

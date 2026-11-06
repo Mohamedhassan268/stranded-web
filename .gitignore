@@ -14,3 +14,5 @@ docs/cinematic-captures/
 docs/reference-study/*.png
 
 docs/evolution/*.png
+.data/
+.next-test/

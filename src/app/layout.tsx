@@ -1,34 +1,36 @@
 import type { Metadata, Viewport } from "next";
+import "@fontsource/barlow/700.css";
+import "@fontsource/cascadia-mono/400.css";
+import "@fontsource-variable/inter";
 import "./globals.css";
-import "./world-theme.css";
 import { SiteHeader, SiteFooter } from "@/components/SiteShell";
+import { siteName, siteUrl } from "@/data/site";
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ||
-      "https://stranded-qognition-268.vercel.app",
+    siteUrl,
   ),
   title: {
-    default: "Stranded — One human. A quantum mind.",
-    template: "%s — Stranded",
+    default: `${siteName}: quantum against classical minds in an evacuation`,
+    template: `%s — ${siteName}`,
   },
   description:
-    "Explore recorded survival decisions through a quantum-cognition model and its classical control. A Qiskit Fall Fest research prototype.",
+    "Explore recorded evacuation decisions through a quantum-cognition model and its classical control, share .qsim scenarios and read the documentation. A model, not a prediction.",
   openGraph: {
     type: "website",
-    siteName: "Stranded",
+    siteName,
     images: [
       {
         url: "/social-card.png",
         width: 1200,
         height: 630,
-        alt: "Stranded: one human, a random world, a quantum mind",
+        alt: "Qognition: quantum against classical minds in an evacuation",
       },
     ],
   },
   twitter: { card: "summary_large_image" },
   icons: { icon: "/icon.svg" },
 };
-export const viewport: Viewport = { themeColor: "#0b1718" };
+export const viewport: Viewport = { themeColor: "#3e2816" };
 export default function RootLayout({
   children,
 }: {

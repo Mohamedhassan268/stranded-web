@@ -4,7 +4,7 @@ test("contact opens the mind, traps focus, and returns to the island", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
+  await page.goto("/cinematic/");
   const scene = page.locator(".cinematic-page");
   await expect(scene).toHaveAttribute("data-phase", "0.0000");
   await page.getByRole("button", { name: /05.*CONNECT/ }).click();
@@ -51,7 +51,7 @@ test("mobile mind inspection fits the viewport and leaves scrolling usable", asy
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
+  await page.goto("/cinematic/");
   await page.getByRole("button", { name: /05.*CONNECT/ }).click();
   await page
     .getByRole("button", { name: "Touch the mind: inspect quantum mind" })

@@ -1,103 +1,121 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { frameLayers, type Replay } from "@/lib/replay";
-export function WorldMap({ run, index }: { run: Replay; index: number }) {
+
+// A plain map figure in the simulator's terrain colours.
+const SIZE = 800;
+const TILES = ["#30a8d6", "#7ac440", "#3a9826", "#928474", "#d4522a"];
+const BEACH = "#f0d48e";
+
+export function WorldMap({ run, index, showEvac }: { run: Replay; index: number; showEvac: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
-  const s = run.steps[index];
+  const step = run.steps[index];
+
   useEffect(() => {
-    const c = ref.current,
-      ctx = c?.getContext("2d");
-    if (!c || !ctx) return;
-    const w = run.world,
-      unit = 600 / w.width;
+    const ctx = ref.current?.getContext("2d");
+    if (!ctx) return;
+    const world = run.world;
+    const unit = SIZE / world.width;
+    const center = (value: number) => (value + 0.5) * unit;
     const layers = frameLayers(run, index);
-    ctx.clearRect(0, 0, 600, 600);
-    ctx.fillStyle = "#0b1c2b";
-    ctx.fillRect(0, 0, 600, 600);
-    const colors = ["#102b3b", "#47675c", "#244d43", "#65727d", "#c9aa6f"];
-    for (let y = 0; y < w.height; y++)
-      for (let x = 0; x < w.width; x++) {
-        const key = `${x},${y}`;
-        let color = colors[w.initial_tiles[y][x]];
-        if (layers.shelter.has(key)) color = colors[4];
-        if (layers.pdc.has(key)) color = "#786c81";
-        if (layers.lahar.has(key)) color = "#77614c";
-        if (layers.lava.has(key)) color = "#db704d";
-        if (layers.surge.has(key)) color = "#ba8d5f";
-        if (layers.active.has(key)) color = "#e8a073";
-        ctx.fillStyle = color;
-        ctx.fillRect(x * unit, y * unit, unit + 0.2, unit + 0.2);
-        ctx.strokeStyle = "rgba(8,11,20,.12)";
-        ctx.strokeRect(x * unit, y * unit, unit, unit);
+    const fill = (cells: Set<string>, color: string) => {
+      ctx.fillStyle = color;
+      for (const cell of cells) {
+        const [x, y] = cell.split(",").map(Number);
+        ctx.fillRect(Math.floor(x * unit), Math.floor(y * unit), Math.ceil(unit), Math.ceil(unit));
       }
-    ctx.strokeStyle = "#63dee9";
-    ctx.lineWidth = 2;
-    for (const p of w.evacuation_map?.assembly_points ?? []) {
-      ctx.strokeRect(p[0] * unit + 3, p[1] * unit + 3, unit - 6, unit - 6);
+    };
+
+    for (let y = 0; y < world.height; y++) {
+      for (let x = 0; x < world.width; x++) {
+        const tile = layers.shelter.has(`${x},${y}`) ? 4 : world.initial_tiles[y][x];
+        const shore = tile === 1 && [[-1, 0], [1, 0], [0, -1], [0, 1]].some(([dx, dy]) => world.initial_tiles[y + dy]?.[x + dx] === 0);
+        ctx.fillStyle = shore ? BEACH : TILES[tile];
+        ctx.fillRect(Math.floor(x * unit), Math.floor(y * unit), Math.ceil(unit), Math.ceil(unit));
+      }
     }
-    const before = s.state.pos,
-      after = s.pos_after;
-    ctx.setLineDash([4, 4]);
-    ctx.strokeStyle = "#f6f8ff";
-    ctx.lineWidth = 1.5;
+
+    const evacuation = world.evacuation_map;
+    if (showEvac && evacuation) {
+      const tones = ["rgba(62,168,32,.14)", "rgba(228,152,24,.24)", "rgba(218,52,38,.32)"];
+      evacuation.zones?.forEach((row, y) =>
+        row.forEach((zone, x) => {
+          if (!world.initial_tiles[y][x]) return;
+          ctx.fillStyle = tones[zone];
+          ctx.fillRect(Math.floor(x * unit), Math.floor(y * unit), Math.ceil(unit), Math.ceil(unit));
+        }),
+      );
+      const route = evacuation.route_from_spawn ?? [];
+      if (route.length > 1) {
+        ctx.strokeStyle = "rgba(255,238,120,.95)";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        route.forEach(([x, y], i) => (i ? ctx.lineTo(center(x), center(y)) : ctx.moveTo(center(x), center(y))));
+        ctx.stroke();
+      }
+    }
+
+    fill(layers.pdc, "rgba(92,78,74,.75)");
+    fill(layers.lahar, "rgba(118,82,48,.75)");
+    fill(layers.surge, "rgba(186,141,95,.7)");
+    fill(layers.active, "rgba(232,110,60,.85)");
+    fill(layers.lava, "rgba(238,105,24,.9)");
+
+    if (world.scenario === "volcano" && world.volcano.vent) {
+      const [vx, vy] = world.volcano.vent;
+      ctx.fillStyle = "#523628";
+      ctx.beginPath();
+      ctx.arc(center(vx), center(vy), unit * 0.7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#da3e20";
+      ctx.beginPath();
+      ctx.arc(center(vx), center(vy), unit * 0.4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    for (const [x, y] of evacuation?.assembly_points ?? []) {
+      if (!showEvac) break;
+      ctx.fillStyle = "#1e6010";
+      ctx.strokeStyle = "#fffaee";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(center(x), center(y), 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    const [fromX, fromY] = step.state.pos;
+    const [toX, toY] = step.pos_after;
+    ctx.strokeStyle = "#fffaee";
+    ctx.lineWidth = 2;
+    if (fromX !== toX || fromY !== toY) {
+      ctx.setLineDash([6, 5]);
+      ctx.beginPath();
+      ctx.moveTo(center(fromX), center(fromY));
+      ctx.lineTo(center(toX), center(toY));
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.arc(center(toX), center(toY), 7, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.fillStyle = "#2c6cb8";
+    ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.moveTo((before[0] + 0.5) * unit, (before[1] + 0.5) * unit);
-    ctx.lineTo((after[0] + 0.5) * unit, (after[1] + 0.5) * unit);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.beginPath();
-    ctx.arc(
-      (after[0] + 0.5) * unit,
-      (after[1] + 0.5) * unit,
-      6,
-      0,
-      Math.PI * 2,
-    );
-    ctx.stroke();
-    ctx.shadowColor = "#987bff";
-    ctx.shadowBlur = 15;
-    ctx.fillStyle = "#c1aeff";
-    ctx.beginPath();
-    ctx.arc(
-      (before[0] + 0.5) * unit,
-      (before[1] + 0.5) * unit,
-      5,
-      0,
-      Math.PI * 2,
-    );
+    ctx.arc(center(fromX), center(fromY), 8, 0, Math.PI * 2);
     ctx.fill();
-    ctx.shadowBlur = 0;
-    ctx.strokeStyle = "#f6f8ff";
-    ctx.lineWidth = 1.5;
     ctx.stroke();
-  }, [run, index, s]);
+  }, [run, index, showEvac, step]);
+
   return (
     <figure className="world-map">
       <canvas
         ref={ref}
-        width="600"
-        height="600"
+        width={SIZE}
+        height={SIZE}
         role="img"
-        aria-label={`Recorded ${run.world.scenario} map, decision ${index + 1}. Agent before action at ${s.state.pos.join(", ")}; position after step ${s.pos_after.join(", ")}.`}
+        aria-label={`Recorded ${run.world.scenario} map, decision ${index + 1}. Person before action at ${step.state.pos.join(", ")}; position after step ${step.pos_after.join(", ")}.`}
       />
-      <figcaption>
-        <span>
-          <i className="legend-dot agent-dot" />
-          Before action [{s.state.pos.join(", ")}]
-        </span>
-        <span>
-          <i className="legend-dot after-dot" />
-          After step [{s.pos_after.join(", ")}]
-        </span>
-        <span>
-          <i className="legend-dot hazard-dot" />
-          Active flow
-        </span>
-        <span>
-          <i className="legend-dot shelter-dot" />
-          Shelter
-        </span>
-      </figcaption>
     </figure>
   );
 }

@@ -2,10 +2,9 @@ import type { Metadata } from "next";
 import CinematicStudy from "@/components/cinematic/CinematicStudy";
 import "./cinematic.css";
 export const metadata: Metadata = {
-  title: "Stranded / Cinematic study 01",
+  title: "The story",
   description:
-    "A local 3D visual study: freefall, an island, and a quantum mind.",
-  robots: { index: false, follow: false },
+    "A 3D story: freefall, an island, and a quantum mind.",
 };
 export default function CinematicPage() {
   return <CinematicStudy />;

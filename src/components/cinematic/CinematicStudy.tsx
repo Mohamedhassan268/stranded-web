@@ -176,7 +176,7 @@ export default function CinematicStudy() {
       ref={shell}
       className="cinematic-page"
       data-inspecting={inspect}
-      aria-label="Stranded interactive island story"
+      aria-label="Interactive island story"
     >
       <div className="cinematic-stage">
         <div
@@ -185,28 +185,25 @@ export default function CinematicStudy() {
           role="img"
           aria-label="A survivor falls to an island, connects with a quantum mind, evades a falling tree and takes cover from a storm"
         />
-        <div className="cinema-grain" aria-hidden="true" />
         <div className="cinema-vignette" aria-hidden="true" />
         <div className="cinema-lid top" aria-hidden="true" />
         <div className="cinema-lid bottom" aria-hidden="true" />
         <header className="cinema-header" inert={inspect}>
-          <Link href="/" className="cinema-brand">
-            STRANDED<span>_</span>
+          <Link className="q-btn q-btn--sand" href="/">
+            &lt; Home
           </Link>
-          <span className="study-label">ONE HUMAN / A QUANTUM MIND</span>
-          <Link className="cinema-exit" href="/demo/">
-            REPLAY LAB <span>↗</span>
+          <Link href="/" className="q-ribbon" aria-label="Qognition home">
+            <span className="q-ribbon-title">QOGNITION</span>
+            <span className="q-ribbon-sub">ONE HUMAN &nbsp;•&nbsp; A QUANTUM MIND</span>
+          </Link>
+          <Link className="q-btn q-btn--sand" href="/demo/">
+            REPLAY
           </Link>
         </header>
-        <div className="cinema-side">
-          <span>ONE HUMAN</span>
-          <i />
-          <span>UNKNOWN TERRITORY</span>
-        </div>
-        <div className="cinema-copy" key={shot} aria-hidden={inspect}>
-          <p className="cinema-eyebrow">
+        <div className="q-card cinema-copy" key={shot} aria-hidden={inspect}>
+          <span className="q-badge" style={{ "--tone": "var(--green-dark)" } as React.CSSProperties}>
             {String(shot + 1).padStart(2, "0")} / {shots[shot].name}
-          </p>
+          </span>
           <h1>{shots[shot].title}</h1>
           <p className="cinema-line">{shots[shot].line}</p>
         </div>
@@ -218,21 +215,16 @@ export default function CinematicStudy() {
           inert={inspect}
         >
           <span className="quantum-target" />
-          <span>
-            TOUCH THE MIND <b>＋</b>
-          </span>
+          <span className="q-btn q-btn--vivid q-btn--purple">Touch the mind</span>
         </button>
         {inspect && <QuantumPanel close={() => toggleMind(false)} />}
-        <div className="cinema-scroll" aria-hidden={inspect}>
-          <span className="scroll-glyph">↓</span>
-          <span>
-            {moving
-              ? "LET THE SHOT UNFOLD"
-              : shot === 6
-                ? "EXPLORE THE RECORDED DECISIONS IN THE REPLAY LAB"
-                : "SCROLL TO TRIGGER THE NEXT SHOT"}
-          </span>
-        </div>
+        <p className="q-hintbar cinema-scroll" aria-hidden={inspect}>
+          {moving
+            ? "LET THE SHOT UNFOLD"
+            : shot === 6
+              ? "EXPLORE THE RECORDED DECISIONS IN THE REPLAY"
+              : "SCROLL TO TRIGGER THE NEXT SHOT"}
+        </p>
         <nav
           className="cinema-chapters"
           aria-label="Cinematic shots"
@@ -240,37 +232,38 @@ export default function CinematicStudy() {
         >
           {shots.map((s, i) => (
             <button
+              className="q-btn q-btn--sand"
               key={s.name}
               onClick={() => goto(i)}
               aria-current={i === shot ? "step" : undefined}
             >
-              <span>{String(i + 1).padStart(2, "0")}</span>
-              <i />
+              <b>{String(i + 1).padStart(2, "0")}</b>
               <span className="chapter-name">{s.name}</span>
             </button>
           ))}
         </nav>
-        <div className="cinema-frame-code" aria-hidden="true">
-          {ready ? "SCENE / ONLINE" : "BUILDING THE WORLD"}
-          <span>□</span>
-        </div>
         {!ready && !error && (
           <div className="cinema-loading" role="status">
-            <span className="loader-bars">▰ ▰ ▰</span>
-            <p>ENTERING THE UNKNOWN</p>
+            <div className="q-card">
+              <span className="q-label loader-bars">BUILDING THE WORLD...</span>
+            </div>
           </div>
         )}
         {error && (
-          <div className="cinema-loading cinema-failure" role="alert">
-            <h2>This scene needs WebGL.</h2>
-            <p>The island could not start in this browser.</p>
-            <Link href="/demo/">Open the replay lab →</Link>
+          <div className="cinema-loading" role="alert">
+            <div className="q-card">
+              <h2 className="q-heading">This scene needs WebGL</h2>
+              <p>The island could not start in this browser.</p>
+              <Link className="q-btn q-btn--vivid q-btn--green" href="/demo/">
+                Open the replay
+              </Link>
+            </div>
           </div>
         )}
         {reduced && (
-          <div className="reduced-notice">
-            Reduced motion · Static shots. Use the numbered controls.
-          </div>
+          <p className="q-hintbar reduced-notice">
+            Reduced motion: static shots. Use the numbered controls.
+          </p>
         )}
       </div>
     </section>
