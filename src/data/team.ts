@@ -25,7 +25,7 @@ export const team: TeamMember[] = [
     study: "AI and Robotics",
     country: "Iraq",
     photo: "/team/muammal-fadhil.jpg",
-    links: {},
+    links: { linkedin: "https://www.linkedin.com/in/muammal-a-fadhil-54a1b8233" },
   },
   {
     name: "Bernard Kim",
@@ -33,7 +33,7 @@ export const team: TeamMember[] = [
     study: "Computer Science",
     country: "Canada",
     photo: "/team/bernard-kim.jpg",
-    links: {},
+    links: { linkedin: "https://www.linkedin.com/in/bernard-kim-9881432a7" },
   },
   {
     name: "Mohammed Hassan",
@@ -41,7 +41,7 @@ export const team: TeamMember[] = [
     study: "Communication and Electronics",
     country: "Egypt",
     photo: "/team/mohammed-hassan.jpg",
-    links: {},
+    links: { linkedin: "https://www.linkedin.com/in/mohamed-hassan-2577861a7" },
   },
   {
     name: "Brodin Vance",
@@ -49,7 +49,7 @@ export const team: TeamMember[] = [
     study: "Honours Mathematics",
     country: "Canada",
     photo: "",
-    links: {},
+    links: { linkedin: "https://www.linkedin.com/in/brodin-vance-13b8202b6" },
   },
 ];
 

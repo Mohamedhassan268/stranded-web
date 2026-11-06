@@ -117,7 +117,9 @@ export default function Home() {
           <div className="section-head">
             <h2 id="findings">What the results say</h2>
             <Link href="/blog/changes-and-results/">Read the full results</Link>
-            <p>Several results go against the original idea. They're reported anyway.</p>
+            <p>
+              Several results go against the original idea. They're reported anyway, and in full in <Link href="/paper/">the paper</Link>.
+            </p>
           </div>
           <div className="findings">
             {findings.map((finding) => (

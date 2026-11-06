@@ -179,6 +179,7 @@ test("the team page shows the people, their photos and their credits", async ({ 
   for (const name of ["Muammal A. Fadhil", "Bernard Kim", "Mohammed Hassan", "Brodin Vance"]) {
     await expect(page.getByRole("heading", { name })).toBeVisible();
   }
+  await expect(page.locator(".team-card").getByRole("link", { name: "LinkedIn" })).toHaveCount(4);
   const photos = page.locator(".team-portrait img");
   await expect(photos).toHaveCount(3);
   for (const src of await photos.evaluateAll((images) => images.map((image) => image.getAttribute("src")!))) {
@@ -191,9 +192,24 @@ test("the team page shows the people, their photos and their credits", async ({ 
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
 
+test("the paper page gives the abstract, findings, limits and the PDF", async ({ page, request }) => {
+  await page.goto("/");
+  await page.getByRole("navigation", { name: "Main navigation" }).getByRole("link", { name: "Paper" }).click();
+  await expect(page).toHaveURL(/\/paper\/$/);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Quantum Cognition");
+  await expect(page.getByText("Muammal A. Fadhil, Mohammed Hassan, Bernard Kim and Brodin Vance")).toBeVisible();
+  await expect(page.locator(".paper-findings li")).toHaveCount(6);
+  await expect(page.getByRole("heading", { name: "What it doesn't show" })).toBeVisible();
+  const pdf = await request.get("/media/qognition-paper.pdf");
+  expect(pdf.status()).toBe(200);
+  expect(pdf.headers()["content-type"]).toContain("application/pdf");
+  await expect(page.getByRole("link", { name: "Conclusion" })).toHaveAttribute("href", "/media/qognition-paper.pdf#page=11");
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+});
+
 test("new pages fit a phone", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  for (const path of ["/blog/", `/blog/${docs.posts[0].slug}/`, "/repo/", "/repo/made_up_island_eruption/", "/docs/", "/docs/quantum-mind/", "/team/", "/science/", "/privacy/"]) {
+  for (const path of ["/blog/", `/blog/${docs.posts[0].slug}/`, "/repo/", "/repo/made_up_island_eruption/", "/docs/", "/docs/quantum-mind/", "/paper/", "/team/", "/science/", "/privacy/"]) {
     await page.goto(path);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), path).toBe(true);
   }

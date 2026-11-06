@@ -2215,6 +2215,104 @@ a.media-card:hover,
   font-weight: 600;
 }
 
+/* Paper -------------------------------------------------------------------- */
+.paper-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.paper-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 290px;
+  align-items: start;
+  gap: 16px;
+}
+
+.paper-main,
+.paper-side {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.paper-layout h2,
+.paper-reader h2 {
+  margin-bottom: 8px;
+  font-size: 21px;
+}
+
+.paper-findings,
+.paper-contents {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.paper-findings {
+  display: grid;
+  gap: 14px;
+}
+
+.paper-findings h3 {
+  font-size: 17px;
+}
+
+.paper-findings h3 span {
+  margin-right: 4px;
+  color: var(--walnut);
+  font-family: var(--mono);
+  font-size: 14px;
+}
+
+.paper-limits {
+  margin: 10px 0 0;
+  padding-left: 20px;
+}
+
+.paper-limits li + li {
+  margin-top: 6px;
+}
+
+.paper-contents li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 5px 0;
+}
+
+.paper-contents li + li {
+  border-top: 1px solid var(--sand);
+}
+
+.paper-side .q-btn {
+  margin-top: 12px;
+}
+
+.paper-reader {
+  margin-top: 16px;
+}
+
+.paper-reader object {
+  display: block;
+  width: 100%;
+  height: min(85vh, 900px);
+  border: 2px solid var(--walnut);
+  background: var(--sand);
+}
+
+.paper-reader object p {
+  padding: 16px;
+}
+
+/* Phones can't show a PDF inside a page, so they use the buttons at the top. */
+@media (max-width: 760px) {
+  .paper-reader {
+    display: none;
+  }
+}
+
 /* Smaller screens ---------------------------------------------------------- */
 @media (max-width: 1240px) {
   .docs-layout {
@@ -2258,6 +2356,10 @@ a.media-card:hover,
 }
 
 @media (max-width: 1040px) {
+  .paper-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .post-featured {
     grid-template-columns: minmax(0, 1fr);
   }
