@@ -173,10 +173,21 @@ test("the blog lists real posts and each one reads as an article", async ({ page
   }
 });
 
-test("the team page holds a place for each track", async ({ page }) => {
+test("the team page shows the people, their photos and their credits", async ({ page, request }) => {
   await page.goto("/team/");
   await expect(page.locator(".team-card")).toHaveCount(4);
-  await expect(page.getByText("Name to be added")).toHaveCount(4);
+  for (const name of ["Muammal A. Fadhil", "Bernard Kim", "Mohammed Hassan", "Brodin Vance"]) {
+    await expect(page.getByRole("heading", { name })).toBeVisible();
+  }
+  const photos = page.locator(".team-portrait img");
+  await expect(photos).toHaveCount(3);
+  for (const src of await photos.evaluateAll((images) => images.map((image) => image.getAttribute("src")!))) {
+    expect((await request.get(src)).status(), src).toBe(200);
+  }
+  await expect(page.locator(".team-card").filter({ hasText: "Brodin Vance" }).locator(".team-portrait")).toHaveText("BV");
+  await expect(page.locator(".team-credits")).toContainText("Mohammed Hassan and Bernard Kim");
+  await expect(page.locator(".team-credits")).toContainText("Muammal A. Fadhil and Brodin Vance");
+  await expect(page.locator(".team-card").getByText(/tech [a-d]|product d|quantum mind|engine/i)).toHaveCount(0);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
 

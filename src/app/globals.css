@@ -2145,24 +2145,24 @@ a.media-card:hover,
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 22px;
+  padding: 14px;
 }
 
 .team-portrait {
   display: grid;
   place-items: center;
-  width: 96px;
-  height: 96px;
+  width: 100%;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
-  margin: 14px 0 12px;
+  margin-bottom: 14px;
   border: 2px solid var(--walnut);
-  border-radius: 50%;
   background: var(--sand);
-  color: var(--gold);
-  font: 700 30px/1 var(--display);
+  color: var(--walnut);
+  font: 700 64px/1 var(--display);
 }
 
 .team-portrait img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -2172,14 +2172,13 @@ a.media-card:hover,
   font-size: 21px;
 }
 
-.team-role {
-  margin-top: 2px;
-  color: var(--gold);
+.team-school {
+  margin-top: 4px;
   font-weight: 600;
 }
 
-.team-bio {
-  margin-top: 8px;
+.team-place {
+  margin-top: 2px;
   color: var(--muted);
 }
 
@@ -2189,6 +2188,31 @@ a.media-card:hover,
   gap: 8px;
   margin-top: auto;
   padding-top: 14px;
+}
+
+.team-credits {
+  margin-top: 16px;
+  padding: 22px;
+}
+
+.team-credits h2 {
+  font-size: 21px;
+}
+
+.team-credits dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px 16px;
+  margin: 12px 0 0;
+}
+
+.team-credits dt {
+  color: var(--muted);
+}
+
+.team-credits dd {
+  margin: 2px 0 0;
+  font-weight: 600;
 }
 
 /* Smaller screens ---------------------------------------------------------- */

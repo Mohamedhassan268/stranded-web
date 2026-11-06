@@ -38,7 +38,7 @@ Three fresh-context, read-only reviewers used the codebase-details and design pe
 
 ## Boundaries
 
-The original supplied blueprint and qognition source were not edited by this implementation. The original source moved from the initial inspected revision during preparation; exports explicitly pin the clean 27c367c5f32f571a7df33b95fe675abdcfc6e7af snapshot. Browser checks do not establish native phone behavior, scientific validation, physical-model validity, or hardware execution. No raw restricted datasets, credentials, tracking, personal photos, fabricated team roles or invented benchmark metrics are shipped.
+The original supplied blueprint and qognition source were not edited by this implementation. The original source moved from the initial inspected revision during preparation; exports explicitly pin the clean 27c367c5f32f571a7df33b95fe675abdcfc6e7af snapshot. Browser checks do not establish native phone behavior, scientific validation, physical-model validity, or hardware execution. No raw restricted datasets, credentials, tracking or invented benchmark metrics are shipped. Team names, photos and credits are as supplied by the team.
 
 ## Publication
 

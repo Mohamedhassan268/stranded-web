@@ -1,18 +1,10 @@
 import type { Metadata } from "next";
 import { Icon } from "@/components/Icons";
-import { team, type TeamMember } from "@/data/team";
+import { credits, team, type TeamMember } from "@/data/team";
 
 export const metadata: Metadata = {
   title: "Team",
   description: "The people behind Qognition.",
-};
-
-const tones: Record<TeamMember["tone"], string> = {
-  green: "var(--green-dark)",
-  orange: "var(--ember)",
-  blue: "var(--blue)",
-  red: "var(--red)",
-  purple: "var(--purple)",
 };
 
 const initials = (name: string) =>
@@ -48,31 +40,37 @@ export default function Team() {
       <header className="page-heading">
         <p className="q-kicker">Qiskit Fall Fest 2026</p>
         <h1>The team</h1>
-        <p>The people who built the quantum mind, the physics, the engine and this site.</p>
+        <p>The people behind Qognition.</p>
       </header>
       <div className="team-grid">
-        {team.map((member, index) => (
-          <article className="q-card team-card" key={`${member.badge}-${index}`}>
-            <span className="q-badge" style={{ "--tone": tones[member.tone] } as React.CSSProperties}>
-              {member.badge}
-            </span>
+        {team.map((member) => (
+          <article className="q-card team-card" key={member.name}>
             <div className="team-portrait">
               {member.photo ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={member.photo} alt={`Portrait of ${member.name}`} />
-              ) : member.name ? (
-                initials(member.name)
+                <img src={member.photo} alt={`Portrait of ${member.name}`} width="640" height="800" />
               ) : (
-                <Icon name="people" width="44" height="44" />
+                initials(member.name)
               )}
             </div>
-            <h2>{member.name || "Name to be added"}</h2>
-            <p className="team-role">{member.role}</p>
-            <p className="team-bio">{member.bio || "Details coming soon."}</p>
+            <h2>{member.name}</h2>
+            <p className="team-school">{member.university}</p>
+            <p className="team-place">{[member.study, member.country].filter(Boolean).join(" • ")}</p>
             <Links links={member.links} />
           </article>
         ))}
       </div>
+      <section className="q-card team-credits" aria-labelledby="team-credits">
+        <h2 id="team-credits">Credits</h2>
+        <dl>
+          {credits.map((credit) => (
+            <div key={credit.work}>
+              <dt>{credit.work}</dt>
+              <dd>{credit.people}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
     </div>
   );
 }

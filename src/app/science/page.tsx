@@ -292,8 +292,8 @@ export default function Science() {
         <h2>Follow the trail.</h2>
         <p>
           The original research repository records the engine, mathematical
-          model, physics tracks and contributor history. Personal roles and
-          photos are not inferred here.
+          model, physics tracks and contributor history. The people behind
+          the project are on the <Link href="/team/">Team page</Link>.
         </p>
         <div className="reference-list">
           <a href={sourceUrl}>

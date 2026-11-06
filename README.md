@@ -21,7 +21,7 @@ Node 24. Install with `npm ci`, start with `npm run dev` (port 3107), check with
 - `/repo/`: the Public Repo, where people post `.qsim` files and review them.
 - `/docs/`: documentation generated from the simulator repository.
 - `/science/`: method, evidence and limits.
-- `/team/`: team cards, read from `src/data/team.ts`. Edit that file to add people.
+- `/team/`: team cards and credits, read from `src/data/team.ts`. Edit that file to change them; photos go in `public/team/`.
 - `/cinematic/`: the 3D story.
 - `/privacy/`: what the site stores.
 
