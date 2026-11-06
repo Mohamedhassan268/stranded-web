@@ -1,0 +1,6 @@
+docs/
+tests/
+scripts/
+playwright-report/
+test-results/
+*.tsbuildinfo

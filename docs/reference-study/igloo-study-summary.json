@@ -1,0 +1,49 @@
+{
+  "reference": "https://www.igloo.inc/",
+  "makerCaseStudy": "https://www.awwwards.com/igloo-inc-case-study.html",
+  "method": {
+    "browser": "Firefox Developer Edition",
+    "protocol": "WebDriver BiDi",
+    "headless": true,
+    "viewport": [
+      1440,
+      900
+    ],
+    "profile": "fresh temporary Puppeteer profile"
+  },
+  "observed": {
+    "opening": "Full-frame snowy terrain, centered luminous igloo, sparse corner text, lower-left scroll prompt and Sound: Off. Animated blocks and numeric tracers sit in scene space.",
+    "typography": "IBM Plex Mono Medium identified by public resource metadata; tight small mono interface with bold custom logo.",
+    "motion": "Floating blocks and scattered snow continue while text glitches resolve; camera framing changes slightly between captures.",
+    "density": "Most screen area belongs to terrain and hero object. UI occupies corners, leaving central composition unobstructed.",
+    "load": "Visible loader persisted about 30 seconds; WebGL2 supported, no page errors or failed requests recorded.",
+    "accessibility": "No light-DOM text, controls or canvas found by document queries after screenshot capture; visual sound control exists but semantic keyboard operation was not verified."
+  },
+  "limits": [
+    "Four opening/native-scroll captures and four wheel-driven captures were visually inspected.",
+    "Large individual wheel deltas did not advance beyond animated igloo opening within bounded capture time. Portfolio/footer camera progression and transition timing were not observed.",
+    "Maker case study was successfully read in Firefox after web fetch timed out.",
+    "No website source, models, textures or audio were copied."
+  ],
+  "makerStatements": {
+    "sections": 3,
+    "previs": "Grey mockups and untextured camera animations establish journey before detail.",
+    "intro": "Real-time intro blends into rest of experience.",
+    "transitions": "Chromatic aberration, tech displacement and frost.",
+    "objects": "Unique ice silhouettes keep successive projects distinct.",
+    "footer": "Particles form models for selected external links.",
+    "ui": "WebGL SDF text supports glitches and scrambling."
+  },
+  "proposedForStranded": [
+    "One continuous camera route: falling silhouette above island; lowered wake shot; close eye aperture; orbit toward glowing quantum mind.",
+    "Use ocular blackout, fog occlusion and short bloom peaks to bridge camera shots; hold quiet compositions between transitions.",
+    "Keep rain/fog/sea motion ambient; localize neon to the mind and a few signs.",
+    "Place scene identity, one short story cue, mute and progress controls at edges. Keep primary controls in semantic DOM.",
+    "Give each narrative beat a distinct silhouette and camera distance."
+  ],
+  "doNotReuse": [
+    "Igloo branding, logo, manifesto, numerical labels, ice forms, models, shaders or media.",
+    "Full-WebGL-only text/control strategy without independently verified accessible equivalents.",
+    "Long blank loader or continuous glitch on reading text."
+  ]
+}

@@ -1,0 +1,583 @@
+{
+  "diag": {
+    "title": "Igloo Inc.",
+    "text": "",
+    "canvasCount": 0,
+    "webgl": true,
+    "resources": [
+      {
+        "name": "https://www.igloo.inc/assets/index-2e130bc1.js",
+        "type": "script",
+        "duration": 424,
+        "transferSize": 6338
+      },
+      {
+        "name": "https://www.igloo.inc/assets/favicon16-9e4401be.png",
+        "type": "other",
+        "duration": 637,
+        "transferSize": 813
+      },
+      {
+        "name": "https://www.igloo.inc/assets/App3D-d68cb154.js",
+        "type": "script",
+        "duration": 322,
+        "transferSize": 422922
+      },
+      {
+        "name": "https://www.igloo.inc/assets/fonts/IBMPlexMono-Medium.json",
+        "type": "fetch",
+        "duration": 931,
+        "transferSize": 1634
+      },
+      {
+        "name": "https://www.igloo.inc/assets/libs/draco/draco_wasm_wrapper.js",
+        "type": "fetch",
+        "duration": 986,
+        "transferSize": 12337
+      },
+      {
+        "name": "https://www.igloo.inc/assets/libs/draco/draco_decoder.wasm",
+        "type": "fetch",
+        "duration": 912,
+        "transferSize": 84877
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/mountain.drc",
+        "type": "fetch",
+        "duration": 911,
+        "transferSize": 12124
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/ground.drc",
+        "type": "fetch",
+        "duration": 916,
+        "transferSize": 19146
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/igloo/igloo_cage.drc",
+        "type": "fetch",
+        "duration": 903,
+        "transferSize": 5527
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/igloo/igloo_outline.drc",
+        "type": "fetch",
+        "duration": 906,
+        "transferSize": 19756
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/igloo.drc",
+        "type": "fetch",
+        "duration": 970,
+        "transferSize": 222007
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/igloo/patch.drc",
+        "type": "fetch",
+        "duration": 959,
+        "transferSize": 540
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/intro_particles.drc",
+        "type": "fetch",
+        "duration": 963,
+        "transferSize": 2319
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/blurrytext.drc",
+        "type": "fetch",
+        "duration": 415,
+        "transferSize": 1378
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/cubes/background_shapes.drc",
+        "type": "fetch",
+        "duration": 412,
+        "transferSize": 969
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/shattered_ring2.drc",
+        "type": "fetch",
+        "duration": 448,
+        "transferSize": 43609
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/floor.drc",
+        "type": "fetch",
+        "duration": 451,
+        "transferSize": 39801
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/blurrytext_cylinder.drc",
+        "type": "fetch",
+        "duration": 382,
+        "transferSize": 5580
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/smoke_trail.drc",
+        "type": "fetch",
+        "duration": 439,
+        "transferSize": 4418
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/shattered_ring_smoke.drc",
+        "type": "fetch",
+        "duration": 422,
+        "transferSize": 10173
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/ceilingsmoke.drc",
+        "type": "fetch",
+        "duration": 419,
+        "transferSize": 13757
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/pudgy.drc",
+        "type": "fetch",
+        "duration": 324,
+        "transferSize": 30910
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/overpass_logo.drc",
+        "type": "fetch",
+        "duration": 407,
+        "transferSize": 14811
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/scroll-datatexture.ktx2",
+        "type": "fetch",
+        "duration": 1877,
+        "transferSize": 1286736
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/noises/blue-8-128-rgb.ktx2",
+        "type": "fetch",
+        "duration": 1376,
+        "transferSize": 50720
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/frost-datatexture.ktx2",
+        "type": "fetch",
+        "duration": 1428,
+        "transferSize": 135081
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/ui/logo-datatexture.ktx2",
+        "type": "fetch",
+        "duration": 1332,
+        "transferSize": 2430
+      },
+      {
+        "name": "https://www.igloo.inc/assets/fonts/IBMPlexMono-Medium-datatexture.ktx2",
+        "type": "fetch",
+        "duration": 1487,
+        "transferSize": 110630
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/ui/sound-datatexture.ktx2",
+        "type": "fetch",
+        "duration": 484,
+        "transferSize": 4705
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/ui/close-datatexture.ktx2",
+        "type": "fetch",
+        "duration": 481,
+        "transferSize": 1126
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/ui/arrow-datatexture.ktx2",
+        "type": "fetch",
+        "duration": 517,
+        "transferSize": 1874
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/wind_noise.ktx2",
+        "type": "fetch",
+        "duration": 670,
+        "transferSize": 18458
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/perlin-datatexture.ktx2",
+        "type": "fetch",
+        "duration": 902,
+        "transferSize": 4089
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/cubes/dot_pattern.ktx2",
+        "type": "fetch",
+        "duration": 927,
+        "transferSize": 1025
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/igloo/triangles_tiling.ktx2",
+        "type": "fetch",
+        "duration": 974,
+        "transferSize": 47916
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/clouds_noise.ktx2",
+        "type": "fetch",
+        "duration": 940,
+        "transferSize": 25673
+      },
+      {
+        "name": "https://www.igloo.inc/assets/bitmapworker-046527f8.js",
+        "type": "other",
+        "duration": 947,
+        "transferSize": 1517
+      },
+      {
+        "name": "https://www.igloo.inc/assets/exrworker-41cbee65.js",
+        "type": "other",
+        "duration": 997,
+        "transferSize": 28507
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/volumes/peachesbody_64.ktx2",
+        "type": "fetch",
+        "duration": 1352,
+        "transferSize": 836920
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/bokeh.ktx2",
+        "type": "fetch",
+        "duration": 1232,
+        "transferSize": 21882
+      },
+      {
+        "name": "https://www.igloo.inc/assets/msdfworker-ac346fa7.js",
+        "type": "other",
+        "duration": 1233,
+        "transferSize": 1841
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/cubes/cube_scene.ktx2",
+        "type": "fetch",
+        "duration": 1265,
+        "transferSize": 41684
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/igloo/igloo_scene.ktx2",
+        "type": "fetch",
+        "duration": 1315,
+        "transferSize": 14784
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/volumes/x_64.ktx2",
+        "type": "fetch",
+        "duration": 1396,
+        "transferSize": 318776
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/volumes/medium_32.ktx2",
+        "type": "fetch",
+        "duration": 1307,
+        "transferSize": 45630
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/ui/visit-datatexture.ktx2",
+        "type": "fetch",
+        "duration": 1309,
+        "transferSize": 1144
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/mosaic.ktx2",
+        "type": "fetch",
+        "duration": 1333,
+        "transferSize": 1389
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/igloo/mountain_color.ktx2",
+        "type": "fetch",
+        "duration": 1865,
+        "transferSize": 592288
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/igloo/ground_color.ktx2",
+        "type": "fetch",
+        "duration": 1870,
+        "transferSize": 625625
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/igloo/ground_glow.ktx2",
+        "type": "fetch",
+        "duration": 1499,
+        "transferSize": 214032
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/igloo/ground_sansigloo_color.ktx2",
+        "type": "fetch",
+        "duration": 1883,
+        "transferSize": 629093
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/igloo/numbers.ktx2",
+        "type": "fetch",
+        "duration": 1315,
+        "transferSize": 5162
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/cubes/blurrytext_atlas.ktx2",
+        "type": "fetch",
+        "duration": 1715,
+        "transferSize": 8081
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/shapes_blurred.ktx2",
+        "type": "fetch",
+        "duration": 1738,
+        "transferSize": 39236
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/shattered_ring.drc",
+        "type": "fetch",
+        "duration": 1671,
+        "transferSize": 40706
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/floor_color.ktx2",
+        "type": "fetch",
+        "duration": 1744,
+        "transferSize": 629952
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/pudgy_dark_color.ktx2",
+        "type": "fetch",
+        "duration": 1512,
+        "transferSize": 129189
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/caustics.ktx2",
+        "type": "fetch",
+        "duration": 1536,
+        "transferSize": 2719
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/overpass_logo_dark_color.ktx2",
+        "type": "fetch",
+        "duration": 1592,
+        "transferSize": 182330
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/igloo/igloo_color.ktx2",
+        "type": "fetch",
+        "duration": 1404,
+        "transferSize": 533674
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/igloo/igloo_exploded_color.ktx2",
+        "type": "fetch",
+        "duration": 1447,
+        "transferSize": 842542
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/numbers-datatexture.ktx2",
+        "type": "fetch",
+        "duration": 1063,
+        "transferSize": 13840
+      },
+      {
+        "name": "https://www.igloo.inc/assets/libs/basis/basis_transcoder.js",
+        "type": "fetch",
+        "duration": 1145,
+        "transferSize": 18299
+      },
+      {
+        "name": "https://www.igloo.inc/assets/libs/basis/basis_transcoder.wasm",
+        "type": "fetch",
+        "duration": 1322,
+        "transferSize": 230574
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/cubes/cube3.drc",
+        "type": "fetch",
+        "duration": 445,
+        "transferSize": 40643
+      },
+      {
+        "name": "https://www.igloo.inc/assets/geometries/cubes/cube1.drc",
+        "type": "fetch",
+        "duration": 461,
+        "transferSize": 28308
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/shattered_ring2_color.ktx2",
+        "type": "fetch",
+        "duration": 577,
+        "transferSize": 229109
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/shattered_ring2_ao.ktx2",
+        "type": "fetch",
+        "duration": 526,
+        "transferSize": 18243
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/shattered_ring_color.ktx2",
+        "type": "fetch",
+        "duration": 538,
+        "transferSize": 219029
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/shattered_ring_ao.ktx2",
+        "type": "fetch",
+        "duration": 537,
+        "transferSize": 17310
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/cubes/cube3_roughness.ktx2",
+        "type": "fetch",
+        "duration": 757,
+        "transferSize": 240540
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/cubes/cube3_normal.ktx2",
+        "type": "fetch",
+        "duration": 1307,
+        "transferSize": 1134730
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/cubes/pudgy_color.ktx2",
+        "type": "fetch",
+        "duration": 802,
+        "transferSize": 183342
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/cubes/cube1_roughness.ktx2",
+        "type": "fetch",
+        "duration": 821,
+        "transferSize": 236983
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/cubes/cube1_normal.ktx2",
+        "type": "fetch",
+        "duration": 1304,
+        "transferSize": 1077477
+      },
+      {
+        "name": "https://www.igloo.inc/assets/images/cubes/overpass_logo_color.ktx2",
+        "type": "fetch",
+        "duration": 844,
+        "transferSize": 233548
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/music-highq.ogg",
+        "type": "fetch",
+        "duration": 951,
+        "transferSize": 1527878
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/wind.ogg",
+        "type": "fetch",
+        "duration": 649,
+        "transferSize": 573216
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/room.ogg",
+        "type": "fetch",
+        "duration": 662,
+        "transferSize": 609988
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/igloo.ogg",
+        "type": "fetch",
+        "duration": 283,
+        "transferSize": 62778
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/beeps.ogg",
+        "type": "fetch",
+        "duration": 321,
+        "transferSize": 10065
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/beeps2.ogg",
+        "type": "fetch",
+        "duration": 312,
+        "transferSize": 10554
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/beeps3.ogg",
+        "type": "fetch",
+        "duration": 368,
+        "transferSize": 10417
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/click-project.ogg",
+        "type": "fetch",
+        "duration": 440,
+        "transferSize": 7053
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/leave-project.ogg",
+        "type": "fetch",
+        "duration": 439,
+        "transferSize": 12209
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/enter-project.ogg",
+        "type": "fetch",
+        "duration": 439,
+        "transferSize": 21882
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/shard.ogg",
+        "type": "fetch",
+        "duration": 438,
+        "transferSize": 22053
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/project-text.ogg",
+        "type": "fetch",
+        "duration": 437,
+        "transferSize": 11337
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/circles.ogg",
+        "type": "fetch",
+        "duration": 489,
+        "transferSize": 28754
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/particles.ogg",
+        "type": "fetch",
+        "duration": 475,
+        "transferSize": 17099
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/logo.ogg",
+        "type": "fetch",
+        "duration": 486,
+        "transferSize": 5155
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/ui-long.ogg",
+        "type": "fetch",
+        "duration": 484,
+        "transferSize": 4753
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/ui-short.ogg",
+        "type": "fetch",
+        "duration": 511,
+        "transferSize": 3321
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audio/manifesto.ogg",
+        "type": "fetch",
+        "duration": 511,
+        "transferSize": 6463
+      },
+      {
+        "name": "https://www.igloo.inc/assets/audioworker-036a09db.js",
+        "type": "other",
+        "duration": 164,
+        "transferSize": 79148
+      }
+    ],
+    "scrollHeight": 900
+  },
+  "errors": [],
+  "requests": []
+}

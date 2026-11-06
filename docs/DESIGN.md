@@ -1,0 +1,21 @@
+# Website design and boundaries
+
+6 November 2026. Follow the supplied blueprint's cinematic dark navy, violet and cyan rhythm, bold geometric type, isometric world and direct replay CTA. Fonts are bundled from Fontsource packages under their included OFL licences. Terrain illustration is original SVG derived from generated source tiles; it is explicitly labelled stylized. No external photos or third-party UI component source is copied.
+
+Next.js App Router exports static HTML per route. React is used for replay state and GSAP for one scroll-linked drop. A shared custom stylesheet implements the supplied tokens without an extra CSS framework or overlapping animation systems. No data service, cookies, analytics, accounts or live-run controls. Keep normal browser scrolling and direct route links; reduced motion renders the same essential content.
+
+## Replay contract
+
+Retain source timeline fields. Zod validates the map, known actions, unit-range values, step chronology, identity and manifest before enabling playback. Fetch verifies SHA-256. An AbortController prevents stale loads replacing a new run; selecting a run/model or scrubbing pauses playback. Failure disables transport but retains retry and navigation. Probability bars and diagnostics are recorded values, never browser recomputations of the scientific model.
+
+The frame is after the current event and before its action. Hazards include additions through that frame. Shelter additions are captured from actual engine state by the exporter and apply only in subsequent frames. Mark pre-action position and after-step position distinctly. The sidecar also records post-step state and blocked execution, without modifying the original engine. Never imply a selected action was executed when a lethal arriving flow blocked it. A completed shorter recording holds its last recorded decision state and displays its outcome separately.
+
+## Security and publication
+
+Only generated, bounded, locally validated JSON is fetched from known manifest paths. React escapes textual reasons; no HTML injection, dynamic code execution, uploaded arbitrary files or external API calls. The build contains no credentials. Private source and public static assets are different boundaries: no `.env`, `.vercel`, raw upstream datasets, personal photos or simulator working directories are published. Vercel handles transport and hosting; security headers disable MIME sniffing and sensitive device permissions. Hosting may still process request logs, as the privacy notice explains.
+
+The new GitHub repo and new Vercel project are explicitly authorized. Check private visibility, remote commit, completed deployment, routes and replay hashes. Keep the original source and existing deployments intact. EGM codebase and design reviewers supplied bounded fresh-context audits; no claim is made to the full five-stage EGM protocol or to full isolation from host instruction files.
+
+## Acceptance
+
+Use TypeScript, static build, dependency audit, complete recording hashes and paired-input checks. Browser evidence covers desktop/mobile, keyboard slider and transport, speed/reset, comparison and model changes, reduced motion, no horizontal overflow, axe accessibility, malformed/missing-data recovery, metadata and 404. Inspect screenshots separately. Interface verification does not validate scientific claims or physical models. All actual results and limits belong in VERIFICATION.md.

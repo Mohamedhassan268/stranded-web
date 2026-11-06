@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+.vercel/
+test-results/
+playwright-report/
+.env*
+!.env.example
+*.tsbuildinfo
+__pycache__/
+.DS_Store
+
+docs/cinematic-captures/
+docs/reference-study/*.png

@@ -1,0 +1,307 @@
+import Link from "next/link";
+import { TerrainArt } from "@/components/TerrainArt";
+import { ScrollStory } from "@/components/ScrollStory";
+import { Icon } from "@/components/Icons";
+import { manifest, sourceUrl } from "@/data/site";
+export default function Home() {
+  return (
+    <>
+      <section className="hero section-wrap">
+        <div className="hero-copy">
+          <p className="eyebrow">
+            <span className="status-dot" />
+            QISKIT FALL FEST 2026 / RESEARCH PROTOTYPE
+          </p>
+          <h1>
+            ONE HUMAN.
+            <br />
+            <span className="muted-heading">
+              A RANDOM
+              <br />
+              WORLD.
+            </span>
+            <br />A <span className="violet-text">QUANTUM</span>
+            <br />
+            MIND.
+          </h1>
+          <p className="hero-description">
+            The world changes. The order matters.
+            <br />
+            Explore how uncertainty and stress shape
+            <br className="desktop-break" /> one simulated human’s next
+            decision.
+          </p>
+          <div className="hero-actions">
+            <Link href="/demo/" className="button primary">
+              <Icon name="play" />
+              Watch the replay
+              <Icon />
+            </Link>
+            <Link href="/science/" className="text-link">
+              Explore the science <Icon name="arrow" />
+            </Link>
+          </div>
+          <p className="microcopy">
+            REAL RECORDED RUNS · LOCAL SIMULATION · NO QPU REQUIRED
+          </p>
+        </div>
+        <div className="hero-visual">
+          <div className="coordinate-label">
+            SCENARIO_01 <span>VOLCANO / GENERATED WORLD</span>
+          </div>
+          <TerrainArt />
+          <div className="floating-note note-top">
+            <span className="status-dot cyan" />
+            MODEL STATUS
+            <span className="note-value">Uncertain. Still deciding.</span>
+          </div>
+          <div className="floating-note note-bottom">
+            <span className="tiny-label">THE NEXT MOVE</span>
+            <span className="note-value">Protect or carry on?</span>
+            <div className="tiny-bars">
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+            </div>
+          </div>
+          <p className="art-caption">
+            An illustration of the world. Open the replay to inspect the
+            recorded data.
+          </p>
+        </div>
+        <div className="hero-bottom">
+          <a href="#story" className="scroll-cue">
+            SCROLL INTO THE WORLD <span>↓</span>
+          </a>
+          <span>01 / FROM UNCERTAINTY TO ACTION</span>
+          <a href={sourceUrl} target="_blank" rel="noreferrer">
+            PROJECT SOURCE <Icon name="external" width="13" />
+          </a>
+        </div>
+      </section>
+      <div className="signal-strip">
+        <span>A WORLD TO SURVIVE</span>
+        <span>01 HUMAN</span>
+        <span>06 NEEDS</span>
+        <span>07 POSSIBLE ACTIONS</span>
+        <span>02 MODEL CONDITIONS</span>
+      </div>
+      <section id="story" className="section-wrap story-section">
+        <ScrollStory>
+          <div className="story-copy">
+            <p className="eyebrow">01 / THE CIRCUMSTANCES</p>
+            <h2>
+              A seeded world.
+              <br />
+              <span className="muted-heading">An uncertain future.</span>
+            </h2>
+            <p>
+              Food. Water. Shelter. Safety. Six competing needs, and an
+              environment that refuses to stand still.
+            </p>
+            <p>
+              Island runs generate terrain from their seed. Volcano runs share
+              terrain while their event seed changes the circumstances.
+            </p>
+            <Link href="/demo/" className="text-link">
+              Step into a recorded world <Icon />
+            </Link>
+          </div>
+          <div className="story-stage">
+            <TerrainArt compact />
+            <div className="terrain-coordinate">
+              <span>STATE: BEFORE ACTION</span>
+              <span>DATA: RECORDED</span>
+            </div>
+          </div>
+        </ScrollStory>
+      </section>
+      <section className="decision-section">
+        <div className="section-wrap">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">02 / THE MIND</p>
+              <h2>
+                Same warning.
+                <br />
+                <span className="violet-text">Different possibilities.</span>
+              </h2>
+            </div>
+            <p>
+              A rule-based prior sets the starting point. The quantum-cognition
+              model lets the sequence of events change a belief—and the
+              probability of protecting oneself.
+            </p>
+          </div>
+          <div
+            className="decision-diagram"
+            aria-label="Recorded events feed a belief state, then a decision distribution"
+          >
+            <div className="diagram-input">
+              <span className="tiny-label">EXPERIENCE</span>
+              <div>
+                <span className="event-circle">⌁</span>Tremor
+              </div>
+              <span className="diagram-plus">THEN</span>
+              <div>
+                <span className="event-circle cyan-circle">≈</span>Gas plume
+              </div>
+            </div>
+            <span className="diagram-arrow">→</span>
+            <div className="belief-node">
+              <div className="belief-orb">
+                <span>ψ</span>
+              </div>
+              <span>Belief evolves</span>
+              <small>Order can change the state</small>
+            </div>
+            <span className="diagram-arrow">→</span>
+            <div className="diagram-output">
+              <span className="tiny-label">POSSIBLE RESPONSE</span>
+              <div>
+                <span>Protect</span>
+                <div className="decorative-bar">
+                  <i />
+                </div>
+              </div>
+              <div>
+                <span>Carry on</span>
+                <div className="decorative-bar cyan-bar">
+                  <i />
+                </div>
+              </div>
+              <small>
+                Conceptual diagram. Inspect measured model values in the replay.
+              </small>
+            </div>
+          </div>
+          <div className="decision-footnote">
+            <span>EVENT ORDER</span>
+            <span>UNCERTAINTY</span>
+            <span>STRESS & DEPHASING</span>
+            <Link href="/science/">
+              How the model works <Icon />
+            </Link>
+          </div>
+        </div>
+      </section>
+      <section className="section-wrap compare-section">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">03 / THE CONTROL</p>
+            <h2>
+              Change the model.
+              <br />
+              <span className="muted-heading">Keep the world.</span>
+            </h2>
+          </div>
+          <p>
+            Replay the quantum-cognition model beside its classical-mixture
+            control. Same initial world and hazard schedule. Different policies
+            can still lead to different local experiences.
+          </p>
+        </div>
+        <div className="comparison-preview">
+          <div>
+            <span className="model-key violet-key" />
+            QUANTUM COGNITION
+            <p>
+              Order-sensitive belief.
+              <br />
+              Stress-dependent dephasing.
+            </p>
+          </div>
+          <span className="versus">↔</span>
+          <div>
+            <span className="model-key cyan-key" />
+            CLASSICAL MIXTURE
+            <p>
+              The same model.
+              <br />
+              Dephasing fixed at λ = 1.
+            </p>
+          </div>
+          <Link href="/demo/?compare=1" className="button secondary">
+            Compare recordings <Icon />
+          </Link>
+        </div>
+        <p className="caption">
+          A descriptive comparison of selected simulations, not evidence that
+          one model predicts human survival better.
+        </p>
+      </section>
+      <section className="evidence-section section-wrap">
+        <div>
+          <p className="eyebrow">04 / THE EVIDENCE</p>
+          <h2>
+            Show the work.
+            <br />
+            <span className="muted-heading">Keep the limits.</span>
+          </h2>
+          <p>
+            The honest result is part of the story. This is a cognitive-modeling
+            prototype, with explicit assumptions and real validation gaps.
+          </p>
+          <Link href="/science/#limitations" className="text-link">
+            Read the evidence & limitations <Icon />
+          </Link>
+        </div>
+        <div className="evidence-list">
+          <article>
+            <span>01</span>
+            <div>
+              <h3>Recorded, not improvised</h3>
+              <p>
+                Every replay comes from the current Python engine. Download its
+                JSON and inspect its source revision and SHA-256.
+              </p>
+            </div>
+          </article>
+          <article>
+            <span>02</span>
+            <div>
+              <h3>Mathematical model, not a brain</h3>
+              <p>
+                Gameplay evaluates density matrices locally. Separate Qiskit
+                circuits express the decision model. These recordings use no
+                quantum hardware.
+              </p>
+            </div>
+          </article>
+          <article>
+            <span>03</span>
+            <div>
+              <h3>Negative results stay visible</h3>
+              <p>
+                The expanded real-island and Titanic research has failed checks.
+                Those findings remain part of the project’s evidence.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section className="section-wrap final-cta">
+        <span className="eyebrow">UNCERTAINTY IS THE STARTING POINT.</span>
+        <h2>
+          What happens
+          <br />
+          <span className="violet-text">next?</span>
+        </h2>
+        <Link href="/demo/" className="button primary">
+          <Icon name="play" />
+          Find out in the replay
+          <Icon />
+        </Link>
+        <p>
+          {manifest.runs.length} authentic recordings · Three fixed cases · Two
+          model conditions
+        </p>
+      </section>
+    </>
+  );
+}
