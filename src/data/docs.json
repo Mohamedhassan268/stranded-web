@@ -1,0 +1,200 @@
+{
+  "sourceRepository": "https://github.com/Muammal/Qiskit-Fest-Qognition",
+  "sourceCommit": "22c424c5e7909bee4b8aae44f8d25f19a8681883",
+  "pages": [
+    {
+      "group": "Start here",
+      "slug": "overview",
+      "title": "Overview",
+      "source": "README.md"
+    },
+    {
+      "group": "Start here",
+      "slug": "quickstart",
+      "title": "Quickstart",
+      "source": "README.md"
+    },
+    {
+      "group": "Start here",
+      "slug": "interface",
+      "title": "Interface tour",
+      "source": "README.md"
+    },
+    {
+      "group": "Start here",
+      "slug": "controls",
+      "title": "Controls",
+      "source": "README.md"
+    },
+    {
+      "group": "Start here",
+      "slug": "sim-files",
+      "title": "Sim files and sharing",
+      "source": "docs/SIM_FILES.md"
+    },
+    {
+      "group": "Start here",
+      "slug": "reports",
+      "title": "End-of-event report",
+      "source": "README.md"
+    },
+    {
+      "group": "How it works",
+      "slug": "architecture",
+      "title": "Architecture",
+      "source": "README.md"
+    },
+    {
+      "group": "How it works",
+      "slug": "integration",
+      "title": "How the tracks fit together",
+      "source": "docs/TECH_A_B_C_INTEGRATION.md"
+    },
+    {
+      "group": "How it works",
+      "slug": "quantum-mind",
+      "title": "Tech A: quantum mind",
+      "source": "docs/TECH_A_QUANTUM_MIND.md"
+    },
+    {
+      "group": "How it works",
+      "slug": "physics",
+      "title": "Tech B: physics and priors",
+      "source": "docs/TECH_B_PHYSICS_AND_PRIORS.md"
+    },
+    {
+      "group": "How it works",
+      "slug": "engine",
+      "title": "Tech C: engine, world and GUI",
+      "source": "docs/TECH_C_ENGINE_WORLD_AND_GUI.md"
+    },
+    {
+      "group": "Scenario models",
+      "slug": "volcano-model",
+      "title": "Volcano model",
+      "source": "docs/VOLCANO_MODEL.md"
+    },
+    {
+      "group": "Scenario models",
+      "slug": "titanic-model",
+      "title": "Titanic model",
+      "source": "docs/TITANIC_MODEL.md"
+    },
+    {
+      "group": "Scenario models",
+      "slug": "pompeii-sources",
+      "title": "Pompeii sources",
+      "source": "docs/POMPEII_SOURCES.md"
+    },
+    {
+      "group": "Scenario models",
+      "slug": "waterloo-sources",
+      "title": "Waterloo sources",
+      "source": "docs/WATERLOO_SOURCES.md"
+    },
+    {
+      "group": "Reference",
+      "slug": "scenario-numbers",
+      "title": "Scenario numbers",
+      "source": "docs/results/SCENARIO_NUMBERS.md"
+    },
+    {
+      "group": "Reference",
+      "slug": "sensitivity",
+      "title": "Sensitivity",
+      "source": "docs/results/SENSITIVITY.md"
+    },
+    {
+      "group": "Reference",
+      "slug": "faq",
+      "title": "FAQ",
+      "source": "docs/FAQ.md"
+    },
+    {
+      "group": "Reference",
+      "slug": "testing",
+      "title": "Testing",
+      "source": "README.md"
+    },
+    {
+      "group": "Reference",
+      "slug": "contributing",
+      "title": "Contributing and licence",
+      "source": "README.md"
+    },
+    {
+      "group": "Reference",
+      "slug": "references",
+      "title": "References",
+      "source": "README.md"
+    }
+  ],
+  "posts": [
+    {
+      "slug": "changes-and-results",
+      "title": "What changed, and what came out",
+      "source": "docs/CHANGES_AND_RESULTS.md",
+      "category": "Results",
+      "date": "2026-11-06",
+      "minutes": 13,
+      "excerpt": "Everything done to align the repository with the Qognition paper, what came out, favourable or not, and what was not done. All results are model output, not predictions. No IBM hardware job was submitted: every...",
+      "cover": null,
+      "note": null
+    },
+    {
+      "slug": "human-data",
+      "title": "Does the quantum model predict human data?",
+      "source": "docs/HUMAN_DATA_RESULTS.md",
+      "category": "Results",
+      "date": "2026-11-06",
+      "minutes": 8,
+      "excerpt": "Every row is here, including the ones that go against the quantum model.",
+      "cover": null,
+      "note": null
+    },
+    {
+      "slug": "lead-time",
+      "title": "Does hesitation cost lives when warning is short?",
+      "source": "docs/results/LEAD_TIME.md",
+      "category": "Results",
+      "date": "2026-11-06",
+      "minutes": 6,
+      "excerpt": "60 seeds, 30 replicates, 4 distances, 288,000 runs. Catalogue leads: median 1.9 h, quartiles 1.1 and 5.8 h, 90th percentile 28 h, n = 22. Model output, not a prediction.",
+      "cover": "/docs-assets/docs/images/lead_time_sweep.png",
+      "note": null
+    },
+    {
+      "slug": "unsure-evacuee",
+      "title": "Why an unsure evacuee waits",
+      "source": "demo-pack/tech-a/01-why-an-unsure-evacuee-waits.md",
+      "category": "Explainer",
+      "date": "2026-11-03",
+      "minutes": 1,
+      "excerpt": "An agent who is genuinely unsure whether the danger is real protects less than either an agent who knows they're safe or one who knows they're in danger — the model's P(protect) dips to 0.36 at maximum uncertainty,...",
+      "cover": "/docs-assets/demo-pack/tech-a/figures/uncertainty_dip.png",
+      "note": "This explainer was written for the first demo, before the later experiments. For the current results, read “What changed, and what came out”."
+    },
+    {
+      "slug": "order-of-warning-signs",
+      "title": "Why the order of warning signs matters",
+      "source": "demo-pack/tech-a/02-why-order-of-warning-signs-matters.md",
+      "category": "Explainer",
+      "date": "2026-11-03",
+      "minutes": 1,
+      "excerpt": "Feeling a tremor and then smelling gas leaves the agent in a measurably different belief than smelling gas and then feeling the tremor, even though it's the same two signs either way — because the model represents them...",
+      "cover": "/docs-assets/demo-pack/tech-a/figures/bloch_paths_tremor_gas_plume.png",
+      "note": "This explainer was written for the first demo, before the later experiments. For the current results, read “What changed, and what came out”."
+    },
+    {
+      "slug": "stress-and-decoherence",
+      "title": "Stress turns a quantum mind classical",
+      "source": "demo-pack/tech-a/03-stress-turns-quantum-mind-classical.md",
+      "category": "Explainer",
+      "date": "2026-11-03",
+      "minutes": 1,
+      "excerpt": "Every time a new sign arrives, the belief loses a little of its coherence, scaled to how stressed the agent currently is — at low stress almost nothing is lost, but as stress climbs toward its cap the belief loses...",
+      "cover": "/docs-assets/demo-pack/tech-a/figures/order_effect_vs_lambda.png",
+      "note": "This explainer was written for the first demo, before the later experiments. For the current results, read “What changed, and what came out”."
+    }
+  ]
+}

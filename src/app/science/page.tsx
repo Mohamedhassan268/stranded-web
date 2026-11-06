@@ -5,11 +5,11 @@ import { Icon } from "@/components/Icons";
 export const metadata: Metadata = {
   title: "The science & evidence",
   description:
-    "What Stranded implements, what Qiskit does, how recordings are produced, and the evidence limits of quantum cognition and survival modeling.",
+    "What Qognition implements, what Qiskit does, how recordings are produced, and the evidence limits of quantum cognition and survival modeling.",
 };
 export default function Science() {
   return (
-    <div className="section-wrap science-page">
+    <div className="q-page science-page">
       <div className="page-heading">
         <div>
           <p className="eyebrow">METHODS / EVIDENCE / LIMITS</p>
@@ -26,11 +26,11 @@ export default function Science() {
       </div>
       <div className="science-intro">
         <p>
-          Stranded connects a survival simulation to a two-qubit decision model.
+          Qognition connects a survival simulation to a two-qubit decision model.
           It is an exploratory abstraction for studying choices—not a claim that
           the brain is a quantum computer.
         </p>
-        <Link href="/demo/" className="button primary">
+        <Link href="/demo/" className="q-btn q-btn--vivid q-btn--green">
           Inspect a recording <Icon />
         </Link>
       </div>
@@ -103,26 +103,32 @@ export default function Science() {
             Inspect current circuit source <Icon name="external" />
           </a>
         </div>
-        <div
-          className="circuit-figure"
-          role="img"
-          aria-label="Conceptual two-qubit circuit: belief preparation, event gates, deliberation unitary and measurement. The recording uses the mathematical path."
-        >
-          <div>
-            <span>q₀ |0⟩</span>
-            <i>Rᵧ</i>
-            <i>EVENTS</i>
-            <i className="unitary">U</i>
-            <span>──</span>
-          </div>
-          <div>
-            <span>q₁ |0⟩</span>
-            <span>──────</span>
-            <i className="unitary">U</i>
-            <i>MEASURE</i>
-          </div>
-          <p>CONCEPTUAL CIRCUIT · NOT A HARDWARE JOB</p>
-        </div>
+        <figure className="circuit-figure">
+          <svg
+            viewBox="0 0 640 132"
+            role="img"
+            aria-label="Conceptual two-qubit circuit: belief preparation, event gates, deliberation unitary and measurement. The recording uses the mathematical path."
+          >
+            <g fill="none" stroke="#6a401c" strokeWidth="2">
+              <path d="M70 40H600M70 100H600" />
+            </g>
+            <g fill="#faefd4" stroke="#6a401c" strokeWidth="2">
+              <rect x="110" y="20" width="60" height="40" rx="6" />
+              <rect x="210" y="20" width="110" height="40" rx="6" />
+              <rect x="370" y="14" width="70" height="104" rx="6" fill="#ead8b2" stroke="#923ac4" strokeWidth="3" />
+              <rect x="480" y="80" width="110" height="40" rx="6" />
+            </g>
+            <g fill="#36200e" textAnchor="middle" fontSize="16" fontFamily="var(--mono)">
+              <text x="36" y="46">q₀ |0⟩</text>
+              <text x="36" y="106">q₁ |0⟩</text>
+              <text x="140" y="46">Ry</text>
+              <text x="265" y="46">EVENTS</text>
+              <text x="405" y="72" fontSize="22" fill="#923ac4">U</text>
+              <text x="535" y="106">MEASURE</text>
+            </g>
+          </svg>
+          <figcaption>Conceptual circuit. Not a hardware job.</figcaption>
+        </figure>
       </section>
       <section className="science-section">
         <p className="eyebrow">03 / THE COMPARISON</p>

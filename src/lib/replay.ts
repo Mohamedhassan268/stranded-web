@@ -56,8 +56,19 @@ export const replaySchema = z.object({
     tiles: z.array(z.array(z.number().int().min(0).max(4))),
     initial_tiles: z.array(z.array(z.number().int().min(0).max(4))),
     weather: z.array(z.string()),
-    volcano: z.object({ hazard_by_step: z.array(hazard) }),
-    evacuation_map: z.object({ assembly_points: z.array(coord) }).optional(),
+    volcano: z.object({
+      hazard_by_step: z.array(hazard),
+      vent: coord.nullable().optional(),
+      phases: z.array(z.string()).optional(),
+    }),
+    evacuation_map: z
+      .object({
+        assembly_points: z.array(coord),
+        zones: z.array(z.array(z.number().int().min(0).max(2))).optional(),
+        route_from_spawn: z.array(coord).optional(),
+      })
+      .optional(),
+    scale_m_per_tile: z.number().positive().optional(),
   }),
   steps: z
     .array(
@@ -94,6 +105,7 @@ export const replaySchema = z.object({
     .max(36),
   outcome: z.enum(["survived", "died"]),
   cause: z.string().nullable(),
+  evacuation: z.record(z.string(), z.number().nullable()).optional(),
   recording: z.object({
     schemaVersion: z.literal(1),
     sourceCommit: z.string(),

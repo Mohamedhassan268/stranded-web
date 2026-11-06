@@ -1,5 +1,22 @@
 # Verification record
 
+## Website redesign, November 2026
+
+Checked locally in Microsoft Edge, against a production build:
+
+- Browser tests: 14 pass, covering the home page, blog, replay, Public Repo posting and reviews, documentation, team, the 3D story, phone widths, reduced motion, recovery from bad recordings, and axe accessibility checks on most pages.
+- Node tests: 26 pass, covering recordings, `.qsim` checks and both stores.
+- TypeScript passes, and the dependency audit of production packages found nothing.
+
+Not checked:
+
+- The Redis store has only run against a stand-in for Upstash, not the real service.
+- Nothing has been deployed, so Vercel behaviour is unverified, including read-only mode.
+- `src/lib/qsim.ts` was compared with `simfile.py` by reading it. A file accepted here was not run through the Python checker.
+- Physical phones and browsers other than Edge.
+
+The record below is from the earlier site.
+
 6 November 2026. This record distinguishes local interface evidence from scientific validation.
 
 ## Review

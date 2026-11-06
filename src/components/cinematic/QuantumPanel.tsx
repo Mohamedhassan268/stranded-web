@@ -51,15 +51,17 @@ export default function QuantumPanel({ close }: { close: () => void }) {
     s = sections[index];
   return (
     <div
-      className="quantum-panel"
+      className="q-card quantum-panel"
       role="dialog"
       aria-modal="true"
       aria-labelledby="quantum-title"
     >
       <header>
-        <span>QUANTUM MIND / CONNECTION ESTABLISHED</span>
-        <button onClick={close} aria-label="Close quantum mind">
-          ✕
+        <span className="q-badge" style={{ "--tone": "var(--purple)" } as React.CSSProperties}>
+          QUANTUM MIND
+        </span>
+        <button className="q-btn" style={{ width: 38, padding: 0 }} onClick={close} aria-label="Close quantum mind">
+          X
         </button>
       </header>
       <p className="quantum-kicker">
@@ -67,10 +69,11 @@ export default function QuantumPanel({ close }: { close: () => void }) {
       </p>
       <h2 id="quantum-title">{s.title}</h2>
       <p className="quantum-body">{s.text}</p>
-      <div className="quantum-formula">{s.formula}</div>
+      <div className="q-sub quantum-formula">{s.formula}</div>
       <nav aria-label="Quantum mind topics">
         {sections.map((section, i) => (
           <button
+            className="q-btn q-btn--sand"
             key={section.name}
             aria-pressed={i === index}
             onClick={() => setIndex(i)}
@@ -81,12 +84,12 @@ export default function QuantumPanel({ close }: { close: () => void }) {
       </nav>
       <div className="quantum-links">
         <a href={sourceFile(s.source)} target="_blank" rel="noreferrer">
-          READ THE SOURCE ↗
+          Read the source
         </a>
-        <Link href="/science/">FULL METHODS ↗</Link>
+        <Link href="/science/">Full methods</Link>
       </div>
-      <button className="quantum-continue" onClick={close}>
-        RETURN TO THE ISLAND <span>→</span>
+      <button className="q-btn q-btn--vivid q-btn--green q-btn--wide quantum-continue" onClick={close}>
+        RETURN TO THE ISLAND
       </button>
     </div>
   );

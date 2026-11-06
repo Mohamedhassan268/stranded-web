@@ -1,14 +1,25 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-test("cinematic homepage, science metadata and 404", async ({ page }) => {
+test("home page, navigation, story, science metadata and 404", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
+  await expect(page).toHaveTitle(/Qognition/);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("quantum probability");
+  await expect(page.getByRole("heading", { name: "Latest from the blog" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "What the results say" })).toBeVisible();
+  await page.getByRole("link", { name: /Island wilderness/ }).click();
+  await expect(page.getByRole("img", { name: /Recorded island map/ })).toBeVisible();
+  const nav = page.getByRole("navigation", { name: "Main navigation" });
+  await nav.getByRole("link", { name: "Public Repo" }).click();
+  await expect(page).toHaveURL(/\/repo\/$/);
+  await expect(nav.getByRole("link", { name: "Public Repo" })).toHaveAttribute("aria-current", "page");
+  await page.goto("/cinematic/");
   await expect(page.locator(".cinematic-canvas canvas")).toBeVisible();
   await expect(page.getByRole("heading", { level: 1 })).toContainText("NO WAY");
-  await expect(page.getByRole("link", { name: "REPLAY LAB" })).toBeInViewport();
+  await expect(page.getByRole("link", { name: "REPLAY" })).toBeInViewport();
   await page.goto("/science/");
-  await expect(page).toHaveTitle(/science.*Stranded/);
+  await expect(page).toHaveTitle(/science.*Qognition/);
   await expect(page.getByText("201 minutes vs 160 recorded")).toBeVisible();
   await page.goto("/unmapped-route/");
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
@@ -74,7 +85,15 @@ test("mobile, reduced motion, text equivalents and accessibility", async ({
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
-  await expect(page.getByRole("link", { name: "REPLAY LAB" })).toBeInViewport();
+  await expect(page.getByRole("heading", { name: "Five scenarios" })).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.goto("/cinematic/");
+  await expect(page.getByRole("link", { name: "REPLAY" })).toBeInViewport();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,
@@ -102,6 +121,19 @@ test("mobile, reduced motion, text equivalents and accessibility", async ({
     path: "test-results/replay-mobile.png",
     fullPage: true,
   });
+});
+test("run summary and evacuation zones", async ({ page }) => {
+  await page.goto("/demo/?case=volcano-91-quantum");
+  await expect(page.getByRole("combobox", { name: "Recorded case" })).toHaveValue("volcano-91-quantum");
+  const summary = page.locator(".run-summary");
+  await expect(summary).toContainText("Quantum mind: survived the full 72 hours");
+  await expect(summary).toContainText("Mixture control on this seed");
+  await expect(summary).toContainText("First pyroclastic flow");
+  await page.getByRole("checkbox", { name: "Show evacuation zones" }).check();
+  await page.getByText("Jump to a decision").click();
+  await page.getByRole("button", { name: /Decision 05/ }).click();
+  await expect(page.getByTestId("step-count")).toHaveText("5 / 36");
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
 test("unavailable or corrupt assets pause playback and allow recovery", async ({
   page,
