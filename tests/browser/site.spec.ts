@@ -5,7 +5,7 @@ test("home page, navigation, story, science metadata and 404", async ({ page }) 
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
   await expect(page).toHaveTitle(/Qognition/);
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("quantum probability");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("think like calculators");
   await expect(page.getByRole("heading", { name: "Latest from the blog" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "What the results say" })).toBeVisible();
   await page.getByRole("link", { name: /Island wilderness/ }).click();
@@ -26,6 +26,51 @@ test("home page, navigation, story, science metadata and 404", async ({ page }) 
     "Lost in the",
   );
   expect(errors).toEqual([]);
+});
+test("the home page erupts on opening, and again on request", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.goto("/");
+  const hero = page.locator(".erupt-hero");
+  await expect(hero).toHaveAttribute("data-phase", "tremor");
+  await expect(page.locator(".erupt-bubble").first()).toHaveText("Tremor?");
+  await expect(hero).toHaveAttribute("data-phase", "eruption", { timeout: 8000 });
+  await expect(hero).toHaveAttribute("data-eruptions", "1");
+  await page.getByRole("button", { name: "Erupt again" }).click();
+  await expect(hero).toHaveAttribute("data-eruptions", "2");
+  expect(
+    await page.locator(".erupt-canvas").evaluate((node: HTMLCanvasElement) => {
+      const { data } = node.getContext("2d")!.getImageData(0, 0, node.width, node.height);
+      return new Set(Array.from({ length: 2000 }, (_, i) => data[i * 40 * 4])).size;
+    }),
+  ).toBeGreaterThan(10);
+  expect((await new AxeBuilder({ page }).include(".erupt-card").analyze()).violations).toEqual([]);
+  expect(errors).toEqual([]);
+});
+test("the ad plays from the home page, with a poster and captions", async ({ page, request }) => {
+  await page.goto("/");
+  const video = page.locator("#ad video");
+  await expect(video).toHaveAttribute("poster", "/media/qognition-ad-poster.jpg");
+  await expect.poll(() => video.evaluate((node: HTMLVideoElement) => Math.round(node.duration))).toBe(30);
+  for (const file of ["qognition-ad.mp4", "qognition-ad-poster.jpg", "qognition-ad.vtt"]) {
+    expect((await request.get(`/media/${file}`)).status(), file).toBe(200);
+  }
+  await page.getByRole("link", { name: "Watch the ad" }).click();
+  await expect(video).toBeInViewport();
+  await video.evaluate(async (node: HTMLVideoElement) => {
+    node.muted = true;
+    await node.play();
+  });
+  await expect.poll(() => video.evaluate((node: HTMLVideoElement) => node.currentTime)).toBeGreaterThan(0.2);
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+});
+test("reduced motion shows the eruption as a still picture", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const hero = page.locator(".erupt-hero");
+  await expect(hero).toHaveAttribute("data-eruptions", "1");
+  await expect(page.getByRole("button", { name: "Erupt again" })).toHaveCount(0);
+  await expect(page.getByRole("img", { name: /Pixel art of an island/ })).toBeVisible();
 });
 test("playback, keyboard slider, speed, reset and paired selection", async ({
   page,

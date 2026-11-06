@@ -15,7 +15,7 @@ Node 24. Install with `npm ci`, start with `npm run dev` (port 3107), check with
 
 ## Routes
 
-- `/`: home page, with the latest posts, headline results and the five scenarios.
+- `/`: home page: an animated opening (`src/components/home/scene.ts`), the description, the 30-second ad, then the latest posts, headline results and the five scenarios.
 - `/blog/`: posts generated from writing in the simulator repository.
 - `/demo/`: step through recorded runs and compare models.
 - `/repo/`: the Public Repo, where people post `.qsim` files and review them.
@@ -59,6 +59,16 @@ curl -X DELETE -H "Authorization: Bearer $MODERATION_TOKEN" https://your-site/ap
 ```
 
 Uploads are checked in `src/lib/qsim.ts`, which follows the file rules of the simulator's `stranded_physics/entities/simfile.py`: format, version, fields, hash, seed, text and size limits. The simulator's full scenario rules live in Python, so the app checks a file again when it opens it. Sims are limited to five uploads an hour per address, and reviews to twenty an hour and three a day per sim. There are no accounts, so these limits are a brake, not a guarantee. Keep an eye on what gets posted.
+
+## The ad
+
+`public/media/qognition-ad.mp4` is a smaller copy of the 18 MB master, which isn't in this repository:
+
+```bash
+ffmpeg -i Qognition_ad_30s.mp4 -c:v libx264 -preset slow -crf 27 -c:a aac -b:a 128k -movflags +faststart public/media/qognition-ad.mp4
+```
+
+Captions in `public/media/qognition-ad.vtt` follow the ad's on-screen text.
 
 ## Recordings
 

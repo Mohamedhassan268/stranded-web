@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FeaturedPost, PostCard } from "@/components/blog/PostCard";
+import { EruptionHero } from "@/components/home/EruptionHero";
 import { posts } from "@/lib/docs";
 
 export const metadata: Metadata = {
   title: { absolute: "Qognition: quantum against classical minds in an evacuation" },
   description:
-    "Can quantum probability explain how people decide to evacuate? Qognition tests a two-qubit model of decision-making against classical minds across five scenarios. A model, not a prediction.",
+    "In a disaster, people don't think like calculators. Qognition tests a two-qubit quantum mind against classical controls across five evacuation scenarios. A model, not a prediction.",
 };
 
 // Each line is the simulator's own summary of the scenario, from _hub_cards in engine/gui.py.
@@ -71,32 +72,35 @@ export default function Home() {
   const [featured, ...rest] = posts;
   return (
     <>
-      <section className="hero">
-        <div className="hero-inner">
-          <div>
-            <p className="q-kicker">A research project from Qiskit Fall Fest 2026</p>
-            <h1>Can quantum probability explain how people decide to evacuate?</h1>
-            <p className="hero-lede">
-              Qognition simulates people making decisions under pressure, and puts a two-qubit model of the mind against classical controls across five evacuation
-              scenarios. A model, not a prediction.
-            </p>
-            <div className="hero-actions">
-              <Link className="q-btn q-btn--gold" href="/blog/">
-                Read the blog
-              </Link>
-              <Link className="q-btn q-btn--ghost" href="/demo/">
-                Watch a replay
-              </Link>
-            </div>
-          </div>
-          <figure className="hero-shot">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/docs-assets/docs/images/04_volcano_evacuation_sim.png" alt="The Qognition simulator running the volcano evacuation scenario" width="1920" height="1080" />
-            <figcaption>The Qognition simulator, a desktop app you can run yourself.</figcaption>
-          </figure>
+      <EruptionHero>
+        <p className="q-kicker">Qiskit Fall Fest 2026</p>
+        <h1>In a disaster, people don&apos;t think like calculators.</h1>
+        <p className="erupt-lede">
+          Qognition is an open-source simulator that gives evacuees a two-qubit quantum mind, then tests it against classical controls across five scenarios, from a
+          volcano to the Titanic. A model, not a prediction.
+        </p>
+        <div className="hero-actions">
+          <a className="q-btn q-btn--vivid q-btn--green" href="#ad">
+            Watch the ad
+          </a>
+          <Link className="q-btn" href="/demo/">
+            Try a replay
+          </Link>
         </div>
-      </section>
+      </EruptionHero>
       <div className="q-page">
+        <section className="home-section ad-section" id="ad" aria-labelledby="ad-title">
+          <div className="section-head">
+            <h2 id="ad-title">Qognition in 30 seconds</h2>
+          </div>
+          <figure className="q-card ad-frame">
+            <video controls playsInline preload="metadata" poster="/media/qognition-ad-poster.jpg" width="1920" height="1080">
+              <source src="/media/qognition-ad.mp4" type="video/mp4" />
+              <track kind="captions" src="/media/qognition-ad.vtt" srcLang="en" label="English" />
+              <a href="/media/qognition-ad.mp4">Download the 30-second ad</a>
+            </video>
+          </figure>
+        </section>
         <section className="home-section" aria-labelledby="latest">
           <div className="section-head">
             <h2 id="latest">Latest from the blog</h2>
