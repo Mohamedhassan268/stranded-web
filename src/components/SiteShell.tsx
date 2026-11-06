@@ -8,6 +8,7 @@ const links = [
   { href: "/demo/", label: "Replay" },
   { href: "/repo/", label: "Public Repo" },
   { href: "/docs/", label: "Documentation" },
+  { href: "/paper/", label: "Paper" },
   { href: "/science/", label: "Science" },
   { href: "/team/", label: "Team" },
 ];
@@ -75,6 +76,9 @@ export function SiteFooter() {
           <ul>
             <li>
               <Link href="/docs/">Documentation</Link>
+            </li>
+            <li>
+              <Link href="/paper/">Paper</Link>
             </li>
             <li>
               <a href={sourceUrl}>Source code</a>
