@@ -46,16 +46,16 @@ export function createStoryEffects(scene: THREE.Scene, land: THREE.Vector3) {
   });
   for (const x of [-1.85, 1.85]) {
     const support = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.18, 0.27, 2.3, 7),
+      new THREE.CylinderGeometry(0.18, 0.27, 2.9, 7),
       wood,
     );
-    support.position.set(x, 1.12, -0.35);
+    support.position.set(x, 1.42, -0.35);
     support.rotation.z = x < 0 ? -0.13 : 0.13;
     shelter.add(support);
   }
   const canopy = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 1), rock);
   canopy.scale.set(2.8, 0.55, 1.9);
-  canopy.position.set(0, 2.8, -0.3);
+  canopy.position.set(0, 3.4, -0.3);
   shelter.add(canopy);
   const back = new THREE.Mesh(new THREE.DodecahedronGeometry(1, 1), rock);
   back.scale.set(2.4, 1.8, 0.65);
@@ -119,7 +119,7 @@ export function createStoryEffects(scene: THREE.Scene, land: THREE.Vector3) {
       uniforms: { time: rainTime, alpha: rainAlpha },
       transparent: true,
       depthWrite: false,
-      vertexShader: `attribute vec3 start;uniform float time;varying float sheltered;void main(){vec3 p=position+vec3(start.x,mod(start.y-time*12.,21.),start.z);sheltered=step(abs(p.x),2.6)*step(abs(p.z+.3),1.7)*step(p.y,2.9);gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
+      vertexShader: `attribute vec3 start;uniform float time;varying float sheltered;void main(){vec3 p=position+vec3(start.x,mod(start.y-time*12.,21.),start.z);sheltered=step(abs(p.x),2.6)*step(abs(p.z+.3),1.7)*step(p.y,3.5);gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
       fragmentShader: `uniform float alpha;varying float sheltered;void main(){gl_FragColor=vec4(.65,.86,.87,alpha*(1.-sheltered));}`,
     }),
   );
